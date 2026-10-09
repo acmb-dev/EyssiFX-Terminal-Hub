@@ -140,6 +140,16 @@
                 <input type="password" id="confirmPassword" placeholder="Confirm password">
             </div>
 
+            <div class="input-group" id="auth-code-group" style="display: none;">
+    <label>Authentication Code</label>
+    <div style="display: flex; gap: 8px;">
+        <input type="text" id="authCode" placeholder="e.g. A8X2B91M" style="margin-bottom: 0;">
+        <button type="button" class="login-btn" style="margin-top: 0; padding: 0 15px; width: auto;" onclick="window.location.href='mailto:aldrinneust@gmail.com?subject=Trade%20Barr%20Access%20Request&body=Hi%20Admin,%20I%20would%20like%20to%20purchase%20an%20access%20code.'">
+            <i class="fas fa-envelope"></i> Request
+        </button>
+    </div>
+            </div>
+
             <button type="submit" class="login-btn" id="auth-btn">
                 <i class="fas fa-lock" style="margin-right: 8px;"></i> Authenticate
             </button>
@@ -156,33 +166,50 @@
         let isLoginMode = true; // Tracks if we are logging in or signing up
 
         function toggleMode() {
-            isLoginMode = !isLoginMode;
-            const confirmGroup = document.getElementById('confirm-group');
-            const authBtn = document.getElementById('auth-btn');
-            const toggleText = document.getElementById('toggle-text');
-            const subtitle = document.getElementById('form-subtitle');
-            const errorMsg = document.getElementById('error-message');
-            
-            // Clear errors and fields when switching
-            errorMsg.style.display = 'none';
-            document.getElementById('confirmPassword').value = '';
+    isLoginMode = !isLoginMode;
+    const confirmGroup = document.getElementById('confirm-group');
+    const authCodeGroup = document.getElementById('auth-code-group'); // NEW
+    const authBtn = document.getElementById('auth-btn');
+    const toggleText = document.getElementById('toggle-text');
+    const subtitle = document.getElementById('form-subtitle');
+    const errorMsg = document.getElementById('error-message');
 
-            if (isLoginMode) {
-                // Switch to Login UI
-                confirmGroup.style.display = 'none';
-                document.getElementById('confirmPassword').removeAttribute('required');
-                subtitle.innerText = 'Terminal Hub Login';
-                authBtn.innerHTML = '<i class="fas fa-lock" style="margin-right: 8px;"></i> Authenticate';
-                toggleText.innerHTML = 'Don\'t have an account? <span onclick="toggleMode()">Sign Up</span>';
-            } else {
-                // Switch to Sign Up UI
-                confirmGroup.style.display = 'block';
-                document.getElementById('confirmPassword').setAttribute('required', 'true');
-                subtitle.innerText = 'Register New Account';
-                authBtn.innerHTML = '<i class="fas fa-user-plus" style="margin-right: 8px;"></i> Create Account';
-                toggleText.innerHTML = 'Already have an account? <span onclick="toggleMode()">Log In</span>';
+    // Clear errors and fields when switching
+    errorMsg.style.display = 'none';
+    document.getElementById('confirmPassword').value = '';
+    document.getElementById('authCode').value = ''; // NEW
+
+    if (isLoginMode) {
+        // Switch to Login UI
+        confirmGroup.style.display = 'none';
+        authCodeGroup.style.display = 'none'; // NEW
+        document.getElementById('confirmPassword').removeAttribute('required');
+        document.getElementById('authCode').removeAttribute('required'); // NEW
+        // ... (keep the rest of your isLoginMode code)
+    } else {
+        // --- LOG IN LOGIC ---
+        const storedPass = localStorage.getItem(storageKey);
+
+        // Check if they are the admin OR if their stored password matches
+        if ((user === 'admin' && pass === 'supreme2026') || (storedPass && storedPass === pass)) {
+            
+            // --- NEW: CHECK IF SUBSCRIPTION HAS EXPIRED ---
+            if (user !== 'admin') {
+                const userExpiry = localStorage.getItem(storageKey + '_expiry');
+                if (userExpiry && userExpiry !== 'LT' && Date.now() > parseInt(userExpiry)) {
+                    errorMsg.innerText = "Your access has expired. Please purchase a new code.";
+                    errorMsg.style.display = 'block';
+                    return;
+                }
             }
+
+            localStorage.setItem('supreme_auth', 'true');
+            window.location.href = 'dashboard.html';
+        } else {
+            errorMsg.innerText = "Invalid credentials. Please try again.";
+            errorMsg.style.display = 'block';
         }
+    }
 
         document.getElementById('authForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -194,43 +221,56 @@
             // Unique key to save this specific user in local storage
             const storageKey = 'supreme_user_' + user;
 
-            if (!isLoginMode) {
-                // --- SIGN UP LOGIC ---
-                const confirmPass = document.getElementById('confirmPassword').value;
+if (!isLoginMode) {
+        // --- SIGN UP LOGIC ---
+        const confirmPass = document.getElementById('confirmPassword').value;
+        const authCodeValue = document.getElementById('authCode').value.trim().toUpperCase();
 
-                if (pass !== confirmPass) {
-                    errorMsg.innerText = "Passwords do not match.";
-                    errorMsg.style.display = 'block';
-                    return;
-                }
+        if (pass !== confirmPass) {
+            errorMsg.innerText = "Passwords do not match.";
+            errorMsg.style.display = 'block';
+            return;
+        }
 
-                if (localStorage.getItem(storageKey)) {
-                    errorMsg.innerText = "Username already exists. Please log in.";
-                    errorMsg.style.display = 'block';
-                    return;
-                }
+        if (localStorage.getItem(storageKey)) {
+            errorMsg.innerText = "Username already exists. Please log in.";
+            errorMsg.style.display = 'block';
+            return;
+        }
 
-                // Save the new user and password to local storage
-                localStorage.setItem(storageKey, pass);
-                
-                // Automatically log them in after creating the account
-                localStorage.setItem('supreme_auth', 'true');
-                window.location.href = 'dashboard.html';
+        // --- NEW: AUTH CODE VALIDATION & TIME LIMIT CALCULATION ---
+        if (authCodeValue.length < 8) {
+            errorMsg.innerText = "Invalid authentication code format.";
+            errorMsg.style.display = 'block';
+            return;
+        }
 
-            } else {
-                // --- LOG IN LOGIC ---
-                const storedPass = localStorage.getItem(storageKey);
+        const durationStr = authCodeValue.slice(-2); // Extracts the last two characters (e.g., '1M')
+        let expiryDate = new Date();
+        let hasLimit = true;
 
-                // Check if they are the admin OR if their stored password matches
-                if ((user === 'admin' && pass === 'supreme2026') || (storedPass && storedPass === pass)) {
-                    localStorage.setItem('supreme_auth', 'true');
-                    window.location.href = 'dashboard.html';
-                } else {
-                    errorMsg.innerText = "Invalid credentials. Please try again.";
-                    errorMsg.style.display = 'block';
-                }
-            }
-        });
+        switch(durationStr) {
+            case '7D': expiryDate.setDate(expiryDate.getDate() + 7); break;
+            case '1M': expiryDate.setMonth(expiryDate.getMonth() + 1); break;
+            case '3M': expiryDate.setMonth(expiryDate.getMonth() + 3); break;
+            case '1Y': expiryDate.setFullYear(expiryDate.getFullYear() + 1); break;
+            case 'LT': hasLimit = false; break;
+            default:
+                errorMsg.innerText = "Invalid code. Please contact admin.";
+                errorMsg.style.display = 'block';
+                return;
+        }
+
+        // Save credentials and expiration time
+        const expirationTime = hasLimit ? expiryDate.getTime() : 'LT';
+        localStorage.setItem(storageKey, pass);
+        localStorage.setItem(storageKey + '_expiry', expirationTime); 
+        
+        // Automatically log them in
+        localStorage.setItem('supreme_auth', 'true');
+        window.location.href = 'dashboard.html';
+
+}
     </script>
 </body>
 </html>

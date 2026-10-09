@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trade Barr - Access</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0b0e14;
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            background: #131722;
+            border: 1px solid #2a2e39;
+            border-radius: 12px;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .logo {
+            color: #D4AF37;
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .logo span {
+            color: #ffffff;
+        }
+
+        .subtitle {
+            color: #a0aec0;
+            font-size: 0.85rem;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .input-group {
+            margin-bottom: 1.2rem;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            color: #a0aec0;
+            font-size: 0.8rem;
+            margin-bottom: 8px;
+        }
+
+        .input-group input {
+            width: 100%;
+            background: #1e222d;
+            border: 1px solid #363c4e;
+            color: #fff;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: #D4AF37;
+        }
+
+        .login-btn {
+            background: #D4AF37;
+            color: #000;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            background: #b5952f;
+        }
+
+        .error-msg {
+            color: #ff4444;
+            font-size: 0.85rem;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .toggle-mode {
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: #a0aec0;
+        }
+
+        .toggle-mode span {
+            color: #D4AF37;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="logo">TRADE<span>BARR</span></div>
+        <div class="subtitle" id="form-subtitle">Terminal Hub Login</div>
+
+        <form id="authForm">
+            <div class="input-group">
+                <label>Username</label>
+                <input type="text" id="username" placeholder="Enter username" required>
+            </div>
+            
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="password" placeholder="Enter password" required>
+            </div>
+
+            <!-- This field is hidden by default, only shows on Sign Up -->
+            <div class="input-group" id="confirm-group" style="display: none;">
+                <label>Confirm Password</label>
+                <input type="password" id="confirmPassword" placeholder="Confirm password">
+            </div>
+
+            <div class="input-group" id="auth-code-group" style="display: none;">
+    <label>Authentication Code</label>
+    <div style="display: flex; gap: 8px;">
+        <input type="text" id="authCode" placeholder="e.g. A8X2B91M" style="margin-bottom: 0;">
+        <button type="button" class="login-btn" style="margin-top: 0; padding: 0 15px; width: auto;" onclick="window.location.href='mailto:aldrinneust@gmail.com?subject=Trade%20Barr%20Access%20Request&body=Hi%20Admin,%20I%20would%20like%20to%20purchase%20an%20access%20code.'">
+            <i class="fas fa-envelope"></i> Request
+        </button>
+    </div>
+            </div>
+
+            <button type="submit" class="login-btn" id="auth-btn">
+                <i class="fas fa-lock" style="margin-right: 8px;"></i> Authenticate
+            </button>
+            
+            <div id="error-message" class="error-msg"></div>
+
+            <div class="toggle-mode" id="toggle-text">
+                Don't have an account? <span onclick="toggleMode()">Sign Up</span>
+            </div>
+        </form>
+    </div>
+
+<script>
+let isLoginMode = true; // Tracks if we are logging in or signing up
+
+// --- HELPER FUNCTION: CALCULATE REMAINING TIME ---
+function getRemainingTimeString(expiry) {
+    if (!expiry || expiry === 'LT') return 'Lifetime Access (Unlimited)';
+    
+    const expiryTime = parseInt(expiry, 10);
+    const now = Date.now();
+    const diffMs = expiryTime - now;
+    
+    if (diffMs <= 0) return 'Expired';
+    
+    const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+    
+    if (days > 0) {
+        return `${days} Days, ${hours} Hours remaining`;
+    } else if (hours > 0) {
+        return `${hours} Hours, ${minutes} Minutes remaining`;
+    } else {
+        return `${minutes} Minutes remaining`;
+    }
+}
+
+function toggleMode() {
+    isLoginMode = !isLoginMode;
+    const confirmGroup = document.getElementById('confirm-group');
+    const authCodeGroup = document.getElementById('auth-code-group');
+    const authBtn = document.getElementById('auth-btn');
+    const toggleText = document.getElementById('toggle-text');
+    const subtitle = document.getElementById('form-subtitle');
+    const errorMsg = document.getElementById('error-message');
+
+    // Clear errors and fields when switching
+    errorMsg.style.display = 'none';
+    document.getElementById('confirmPassword').value = '';
+    document.getElementById('authCode').value = '';
+
+    if (isLoginMode) {
+        // Switch to Login UI
+        confirmGroup.style.display = 'none';
+        authCodeGroup.style.display = 'none';
+        document.getElementById('confirmPassword').removeAttribute('required');
+        document.getElementById('authCode').removeAttribute('required');
+        
+        subtitle.innerText = 'Terminal Hub Login';
+        authBtn.innerHTML = '<i class="fas fa-lock" style="margin-right: 8px;"></i> Authenticate';
+        toggleText.innerHTML = 'Don\'t have an account? <span onclick="toggleMode()">Sign Up</span>';
+    } else {
+        // Switch to Sign Up UI
+        confirmGroup.style.display = 'block';
+        authCodeGroup.style.display = 'block';
+        document.getElementById('confirmPassword').setAttribute('required', 'true');
+        document.getElementById('authCode').setAttribute('required', 'true');
+        
+        subtitle.innerText = 'Register New Account';
+        authBtn.innerHTML = '<i class="fas fa-user-plus" style="margin-right: 8px;"></i> Create Account';
+        toggleText.innerHTML = 'Already have an account? <span onclick="toggleMode()">Log In</span>';
+    }
+}
+
+document.getElementById('authForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const user = document.getElementById('username').value.trim();
+    const pass = document.getElementById('password').value;
+    const errorMsg = document.getElementById('error-message');
+
+    const storageKey = 'supreme_user_' + user;
+
+    if (!isLoginMode) {
+        // --- SIGN UP LOGIC ---
+        const confirmPass = document.getElementById('confirmPassword').value;
+        const authCodeValue = document.getElementById('authCode').value.trim().toUpperCase();
+
+        if (pass !== confirmPass) {
+            errorMsg.innerText = "Passwords do not match.";
+            errorMsg.style.display = 'block';
+            return;
+        }
+
+        if (localStorage.getItem(storageKey)) {
+            errorMsg.innerText = "Username already exists. Please log in.";
+            errorMsg.style.display = 'block';
+            return;
+        }
+
+        // --- AUTH CODE VALIDATION & TIME LIMIT CALCULATION ---
+        if (authCodeValue.length < 8) {
+            errorMsg.innerText = "Invalid authentication code format.";
+            errorMsg.style.display = 'block';
+            return;
+        }
+
+        const durationStr = authCodeValue.slice(-2); // Extracts last two characters (e.g. '1M')
+        let expiryDate = new Date();
+        let hasLimit = true;
+
+        switch(durationStr) {
+            case '1D': expiryDate.setDate(expiryDate.getDate() + 1); break;
+            case '7D': expiryDate.setDate(expiryDate.getDate() + 7); break;
+            case '1M': expiryDate.setMonth(expiryDate.getMonth() + 1); break;
+            case '3M': expiryDate.setMonth(expiryDate.getMonth() + 3); break;
+            case '1Y': expiryDate.setFullYear(expiryDate.getFullYear() + 1); break;
+            case 'LT': hasLimit = false; break;
+            default:
+                errorMsg.innerText = "Invalid code. Please contact admin.";
+                errorMsg.style.display = 'block';
+                return;
+        }
+
+        // Save credentials and expiration time
+        const expirationTime = hasLimit ? expiryDate.getTime() : 'LT';
+        localStorage.setItem(storageKey, pass);
+        localStorage.setItem(storageKey + '_expiry', expirationTime);
+
+        // Set active user session
+        localStorage.setItem('current_user', user);
+        localStorage.setItem('supreme_auth', 'true');
+
+        const timeLeftText = getRemainingTimeString(expirationTime);
+
+        // Show dark gold welcome popup
+        Swal.fire({
+            title: 'Account Registered!',
+            html: `<p style="color: #a0aec0; margin-bottom: 12px;">Welcome <b>${user}</b>!</p>
+                   <div style="background: #1a1d24; border: 1px solid #d4af37; padding: 12px; border-radius: 6px; color: #d4af37; font-weight: bold; font-size: 1rem;">
+                       ⏳ Access Duration: ${timeLeftText}
+                   </div>`,
+            icon: 'success',
+            background: '#131722',
+            color: '#ffffff',
+            confirmButtonColor: '#d4af37',
+            confirmButtonText: 'Enter Dashboard'
+        }).then(() => {
+            window.location.href = 'dashboard.html';
+        });
+
+    } else {
+        // --- LOG IN LOGIC ---
+        const storedPass = localStorage.getItem(storageKey);
+
+        if ((user === 'admin' && pass === 'supreme2026') || (storedPass && storedPass === pass)) {
+            
+            let userExpiry = 'LT';
+            if (user !== 'admin') {
+                userExpiry = localStorage.getItem(storageKey + '_expiry');
+                if (userExpiry && userExpiry !== 'LT' && Date.now() > parseInt(userExpiry)) {
+                    errorMsg.innerText = "Your access has expired. Please purchase a new code.";
+                    errorMsg.style.display = 'block';
+                    return;
+                }
+            }
+
+            // Set active user session
+            localStorage.setItem('current_user', user);
+            localStorage.setItem('supreme_auth', 'true');
+
+            const timeLeftText = (user === 'admin') ? 'Lifetime Access (Unlimited)' : getRemainingTimeString(userExpiry);
+
+            // Show dark gold time remaining popup
+            Swal.fire({
+                title: 'Access Granted!',
+                html: `<p style="color: #a0aec0; margin-bottom: 12px;">Welcome back, <b>${user}</b>!</p>
+                       <div style="background: #1a1d24; border: 1px solid #d4af37; padding: 12px; border-radius: 6px; color: #d4af37; font-weight: bold; font-size: 1rem;">
+                           ⏳ Time Remaining: ${timeLeftText}
+                       </div>`,
+                icon: 'success',
+                background: '#131722',
+                color: '#ffffff',
+                confirmButtonColor: '#d4af37',
+                confirmButtonText: 'Open Dashboard'
+            }).then(() => {
+                window.location.href = 'dashboard.html';
+            });
+
+        } else {
+            errorMsg.innerText = "Invalid credentials. Please try again.";
+            errorMsg.style.display = 'block';
+        }
+    }
+});
+</script>
+</body>
+</html>

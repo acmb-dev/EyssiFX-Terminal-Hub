@@ -124,7 +124,7 @@ Return strictly a JSON object formatted exactly like this, with no markdown, no 
 }`;
 
                 // Fetching from Google's updated 3.6-flash endpoint
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${savedKey}`, {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${savedKey}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({

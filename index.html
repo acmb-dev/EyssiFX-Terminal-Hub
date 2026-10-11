@@ -156,24 +156,24 @@
             </button>
             
             <div id="error-message" class="error-msg"></div>
-
-            <div class="toggle-mode" id="toggle-text">
-                Don't have an account? <span onclick="toggleMode()">Sign Up</span>
-            </div>
+<!-- Replace your existing <div class="toggle-node" id="toggle-text"> element with this: -->
+<div class="toggle-node" id="toggle-text" style="display: flex; justify-content: space-between; font-size: 0.8rem;">
+    <span onclick="setAuthMode('signup')" style="cursor: pointer; color: #d4af37; text-decoration: underline;">Create Account</span>
+    <span onclick="setAuthMode('renew')" style="cursor: pointer; color: #d4af37; text-decoration: underline;">Renew Access</span>
+</div>
         </form>
     </div>
-
 <script>
-let isLoginMode = true; // Tracks if we are logging in or signing up
+let authMode = 'login'; // Can be 'login', 'signup', or 'renew'
 
 // --- OFFICIAL WHITE-LISTED ACCESS CODES ---
 const VALID_CODES = [
-    "K8M2Q91D", "X4P8L21D", "A9T3V61D", "R2N7B51D", "W8C1J41D", "F6Y9D31D", "M3K8Z11D", "H5Q2X71D", "B4V9N61D", "T7L1P81D", "C2R6W91D", "J8A3F51D", "N4X7K21D", "P9D5M11D", "V3B8Q61D", "L6T2H91D", "Z1F4R71D", "Q5N9C31D", "D8W2Y61D", "G3J7A41D", 
+    "K7M2Q91D", "X4P8L21D", "A9T3V61D", "R2N7B51D", "W8C1J41D", "F6Y9D31D", "M3K8Z11D", "H5Q2X71D", "B4V9N61D", "T7L1P81D", "C2R6W91D", "J8A3F51D", "N4X7K21D", "P9D5M11D", "V3B8Q61D", "L6T2H91D", "Z1F4R71D", "Q5N9C31D", "D8W2Y61D", "G3J7A41D", 
     "Y6K2M87D", "C9P4R17D", "N3V7X57D", "B8T2Q67D", "F1L9D47D", "W5A3K77D", "R7X2J97D", "M4Q8C17D", "T6N3B57D", "H9V1P77D", "A2D6Y87D", "K5R9F37D", "X1C4M77D", "P8J2W67D", "D3Z7L57D", "V9B4T27D", "Q6H1N87D", "L2F5A97D", "G7M3X47D", "J4Y8R17D", 
     "P3X7K91M", "A6N2W41M", "Z8R5C11M", "T4J9M21M", "B7Q3L61M", "F2V8D51M", "K9Y1P41M", "W3C6N71M", "R5M2X81M", "D1L7A91M", "H4T8Q31M", "N6B1Z51M", "X7P3F21M", "C8J4V61M", "M2R9K51M", "Y5D1W81M", "L9A3T71M", "Q4X6B21M", "V1N8H31M", "J7F5C91M", 
     "R8K3V13M", "X5D9P23M", "B1M7Q43M", "T9C2L63M", "H3W8N53M", "A7F4Y13M", "K2J6R93M", "P5V1D83M", "N9X3B73M", "C4Q8M23M", "W1L6T53M", "D7R2A93M", "Y3H5K83M", "M6P9X13M", "F8B4N23M", "Q1T7C53M", "L4V9J33M", "Z2A6W83M", "G5N1R73M", "J9C3D43M", 
     "V4K8M21Y", "D9Q3X71Y", "L1B6T51Y", "A8R2N41Y", "Y7C5P11Y", "M3W9F61Y", "Q2J8H41Y", "T5X1D71Y", "B6N4K91Y", "P1V7C31Y", "X9L2R51Y", "H8M4A11Y", "C3T7Q61Y", "R6Y1N81Y", "F2D9W51Y", "K7P3B41Y", "N5A8V21Y", "W4J6X91Y", "Z1C5M71Y", "G8Q2L41Y", 
-    "J5R8X2LT", "M9C4V1LT", "A3K7P6LT", "W2N8D5LT", "Q7F1B9LT", "X4T6H3LT", "B8Y2M5LT", "L3V9R1LT", "D6P4K8LT", "T1Z7C5LT", "N8A2W6LT", "F5J3Q9LT", "R4M7X1LT", "C9H2V8LT", "Y6B1D4LT", "P2K5N7LT", "G7W3A8LT", "Z4L9T2LT", "H1Q6F5LT", "V8D3J7LT"
+    "J5R8X2LT", "M9C4V1LT", "A3K7P6LT", "W2N8D5LT", "Q7F1B9LT", "X4T6H3LT", "B8Y2M5LT", "L3V9R1LT", "D6P4K8-LT", "T1Z7C5LT", "N8A2W6LT", "F5J3Q9LT", "R4M7X1LT", "C9H2V8LT", "Y6B1D4LT", "P2K5N7LT", "G7W3A8LT", "Z4L9T2LT", "H1Q6F5LT", "V8D3J7LT"
 ];
 
 // --- HELPER FUNCTION: CALCULATE REMAINING TIME ---
@@ -204,19 +204,21 @@ window.onload = function() {
     if (urlParams.get('expired') === 'true') {
         Swal.fire({
             title: 'Access Expired',
-            html: '<p style="color: #a0aec0;">Your subscription duration has ended. Please purchase a new access code to continue using the terminal.</p>',
+            html: '<p style="color: #a0aec0;">Your subscription duration has ended. Please renew your account with a new code below.</p>',
             icon: 'warning',
             background: '#131722',
             color: '#ffffff',
             confirmButtonColor: '#d4af37',
-            confirmButtonText: 'Understood'
+            confirmButtonText: 'Renew Now'
+        }).then(() => {
+            setAuthMode('renew');
         });
         window.history.replaceState({}, document.title, "index.html");
     }
 };
 
-function toggleMode() {
-    isLoginMode = !isLoginMode;
+function setAuthMode(mode) {
+    authMode = mode;
     const confirmGroup = document.getElementById('confirm-group');
     const authCodeGroup = document.getElementById('auth-code-group');
     const authBtn = document.getElementById('auth-btn');
@@ -228,7 +230,7 @@ function toggleMode() {
     document.getElementById('confirmPassword').value = '';
     document.getElementById('authCode').value = '';
 
-    if (isLoginMode) {
+    if (authMode === 'login') {
         confirmGroup.style.display = 'none';
         authCodeGroup.style.display = 'none';
         document.getElementById('confirmPassword').removeAttribute('required');
@@ -236,8 +238,8 @@ function toggleMode() {
         
         subtitle.innerText = 'Terminal Hub Login';
         authBtn.innerHTML = '<i class="fas fa-lock" style="margin-right: 8px;"></i> Authenticate';
-        toggleText.innerHTML = 'Don\'t have an account? <span onclick="toggleMode()">Sign Up</span>';
-    } else {
+        toggleText.innerHTML = '<span onclick="setAuthMode(\'signup\')" style="cursor: pointer; color: #d4af37; text-decoration: underline;">Create Account</span> <span onclick="setAuthMode(\'renew\')" style="cursor: pointer; color: #d4af37; text-decoration: underline;">Renew Access</span>';
+    } else if (authMode === 'signup') {
         confirmGroup.style.display = 'block';
         authCodeGroup.style.display = 'block';
         document.getElementById('confirmPassword').setAttribute('required', 'true');
@@ -245,7 +247,16 @@ function toggleMode() {
         
         subtitle.innerText = 'Register New Account';
         authBtn.innerHTML = '<i class="fas fa-user-plus" style="margin-right: 8px;"></i> Create Account';
-        toggleText.innerHTML = 'Already have an account? <span onclick="toggleMode()">Log In</span>';
+        toggleText.innerHTML = '<span onclick="setAuthMode(\'login\')" style="cursor: pointer; color: #d4af37; text-decoration: underline;">Already have an account? Log In</span>';
+    } else if (authMode === 'renew') {
+        confirmGroup.style.display = 'none';
+        authCodeGroup.style.display = 'block';
+        document.getElementById('confirmPassword').removeAttribute('required');
+        document.getElementById('authCode').setAttribute('required', 'true');
+        
+        subtitle.innerText = 'Renew Subscription';
+        authBtn.innerHTML = '<i class="fas fa-sync-alt" style="margin-right: 8px;"></i> Renew Access';
+        toggleText.innerHTML = '<span onclick="setAuthMode(\'login\')" style="cursor: pointer; color: #d4af37; text-decoration: underline;">Back to Log In</span>';
     }
 }
 
@@ -255,10 +266,9 @@ document.getElementById('authForm').addEventListener('submit', function(e) {
     const user = document.getElementById('username').value.trim();
     const pass = document.getElementById('password').value;
     const errorMsg = document.getElementById('error-message');
-
     const storageKey = 'supreme_user_' + user;
 
-    if (!isLoginMode) {
+    if (authMode === 'signup') {
         // --- SIGN UP LOGIC ---
         const confirmPass = document.getElementById('confirmPassword').value;
         const authCodeValue = document.getElementById('authCode').value.trim().toUpperCase();
@@ -275,43 +285,31 @@ document.getElementById('authForm').addEventListener('submit', function(e) {
             return;
         }
 
-        // --- VALIDATE AGAINST OFFICIAL CODE LIST ---
         if (!VALID_CODES.includes(authCodeValue)) {
             errorMsg.innerText = "Invalid access code. Please enter a valid purchased code.";
             errorMsg.style.display = 'block';
             return;
         }
 
-        // --- PREVENT CODE RE-USE (SINGLE-USE PROTECTION) ---
         if (localStorage.getItem('used_code_' + authCodeValue)) {
             errorMsg.innerText = "This access code has already been used.";
             errorMsg.style.display = 'block';
             return;
         }
 
-        // --- AUTOMATIC TIME LIMIT CALCULATION FROM CODE SUFFIX ---
         let expiryDate = new Date();
         let hasLimit = true;
 
-        if (authCodeValue.includes('7D')) {
-            expiryDate.setDate(expiryDate.getDate() + 7);
-        } else if (authCodeValue.includes('1D')) {
-            expiryDate.setDate(expiryDate.getDate() + 1);
-        } else if (authCodeValue.includes('3M')) {
-            expiryDate.setMonth(expiryDate.getMonth() + 3);
-        } else if (authCodeValue.includes('1M')) {
-            expiryDate.setMonth(expiryDate.getMonth() + 1);
-        } else if (authCodeValue.includes('1Y')) {
-            expiryDate.setFullYear(expiryDate.getFullYear() + 1);
-        } else if (authCodeValue.includes('LT')) {
-            hasLimit = false;
-        } else {
-            expiryDate.setMonth(expiryDate.getMonth() + 1); // Default fallback
-        }
+        if (authCodeValue.includes('7D')) expiryDate.setDate(expiryDate.getDate() + 7);
+        else if (authCodeValue.includes('1D')) expiryDate.setDate(expiryDate.getDate() + 1);
+        else if (authCodeValue.includes('3M')) expiryDate.setMonth(expiryDate.getMonth() + 3);
+        else if (authCodeValue.includes('1M')) expiryDate.setMonth(expiryDate.getMonth() + 1);
+        else if (authCodeValue.includes('1Y')) expiryDate.setFullYear(expiryDate.getFullYear() + 1);
+        else if (authCodeValue.includes('LT')) hasLimit = false;
+        else expiryDate.setMonth(expiryDate.getMonth() + 1);
 
         const expirationTime = hasLimit ? expiryDate.getTime() : 'LT';
         
-        // Save credentials, expiration, and mark code as consumed
         localStorage.setItem(storageKey, pass);
         localStorage.setItem(storageKey + '_expiry', expirationTime);
         localStorage.setItem('used_code_' + authCodeValue, 'true');
@@ -336,6 +334,74 @@ document.getElementById('authForm').addEventListener('submit', function(e) {
             window.location.href = 'dashboard.html';
         });
 
+    } else if (authMode === 'renew') {
+        // --- RENEW SUBSCRIPTION LOGIC ---
+        const authCodeValue = document.getElementById('authCode').value.trim().toUpperCase();
+        const storedPass = localStorage.getItem(storageKey);
+
+        if (!storedPass || storedPass !== pass) {
+            errorMsg.innerText = "Invalid username or password.";
+            errorMsg.style.display = 'block';
+            return;
+        }
+
+        if (!VALID_CODES.includes(authCodeValue)) {
+            errorMsg.innerText = "Invalid access code. Please enter a valid code.";
+            errorMsg.style.display = 'block';
+            return;
+        }
+
+        if (localStorage.getItem('used_code_' + authCodeValue)) {
+            errorMsg.innerText = "This access code has already been used.";
+            errorMsg.style.display = 'block';
+            return;
+        }
+
+        let durationMs = 0;
+        if (authCodeValue.includes('7D')) durationMs = 7 * 24 * 60 * 60 * 1000;
+        else if (authCodeValue.includes('1D')) durationMs = 1 * 24 * 60 * 60 * 1000;
+        else if (authCodeValue.includes('3M')) durationMs = 90 * 24 * 60 * 60 * 1000;
+        else if (authCodeValue.includes('1M')) durationMs = 30 * 24 * 60 * 60 * 1000;
+        else if (authCodeValue.includes('1Y')) durationMs = 365 * 24 * 60 * 60 * 1000;
+        else if (authCodeValue.includes('LT')) durationMs = 'LT';
+        else durationMs = 30 * 24 * 60 * 60 * 1000;
+
+        const currentExpiry = localStorage.getItem(storageKey + '_expiry');
+        let baseTime = Date.now();
+        
+        // If their subscription hasn't fully expired yet, stack the time from their current expiration date
+        if (currentExpiry && currentExpiry !== 'LT' && parseInt(currentExpiry) > baseTime) {
+            baseTime = parseInt(currentExpiry);
+        }
+
+        let newExpiry = 'LT';
+        if (durationMs !== 'LT') {
+            newExpiry = baseTime + durationMs;
+        }
+
+        localStorage.setItem(storageKey + '_expiry', newExpiry);
+        localStorage.setItem('used_code_' + authCodeValue, 'true');
+
+        localStorage.setItem('current_user', user);
+        localStorage.setItem('supreme_auth', 'true');
+
+        const timeLeftText = getRemainingTimeString(newExpiry);
+
+        Swal.fire({
+            title: 'Subscription Renewed!',
+            html: `<p style="color: #a0aec0; margin-bottom: 12px;">Account <b>${user}</b> has been extended successfully!</p>
+                   <div style="background: #1a1d24; border: 1px solid #d4af37; padding: 12px; border-radius: 6px; color: #d4af37; font-weight: bold; font-size: 1rem;">
+                       ⏳ New Duration: ${timeLeftText}
+                   </div>`,
+            icon: 'success',
+            background: '#131722',
+            color: '#ffffff',
+            confirmButtonColor: '#d4af37',
+            confirmButtonText: 'Enter Dashboard'
+        }).then(() => {
+            window.location.href = 'dashboard.html';
+        });
+
     } else {
         // --- LOG IN LOGIC ---
         const storedPass = localStorage.getItem(storageKey);
@@ -346,7 +412,7 @@ document.getElementById('authForm').addEventListener('submit', function(e) {
             if (user !== 'admin') {
                 userExpiry = localStorage.getItem(storageKey + '_expiry');
                 if (userExpiry && userExpiry !== 'LT' && Date.now() > parseInt(userExpiry)) {
-                    errorMsg.innerText = "Your access has expired. Please purchase a new code.";
+                    errorMsg.innerText = "Your access has expired. Please click 'Renew Access' below.";
                     errorMsg.style.display = 'block';
                     return;
                 }
@@ -378,6 +444,6 @@ document.getElementById('authForm').addEventListener('submit', function(e) {
         }
     }
 });
-</script>           
+</script>
 </body>
 </html>

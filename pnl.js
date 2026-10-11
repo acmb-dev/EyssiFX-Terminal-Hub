@@ -377,7 +377,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             e.preventDefault();
 
-            const allSectionIds = ['dashboard', 'signal', 'chart-analysis', 'fundamentals', 'history', 'pnl'];
+            const allSectionIds = ['dashboard', 'signal', 'chart-analysis', 'btc-chart', 'fundamentals', 'history', 'pnl'];
             allSectionIds.forEach(secId => {
                 const sec = document.getElementById(secId);
                 if (sec) sec.style.display = 'none';

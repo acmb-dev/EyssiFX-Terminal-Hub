@@ -289,7 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error("BTC Sync Error:", error);
                 document.getElementById('btc-smc-structure').textContent = `Connection Error: ${error.message}`;
             } finally {
-                btcSyncBtn.innerHTML = '<i class="fas fa-robot" style="margin-right: 8px;"></i> Sync Live Chart Insight';
+                btcSyncBtn.innerHTML = '<i class="fas fa-solid fa-magnifying-glass-dollar" style="margin-right: 8px;"></i> Sync Live Chart Insight';
             }
         });
     }

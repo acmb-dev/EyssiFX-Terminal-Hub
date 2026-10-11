@@ -422,7 +422,7 @@ function renderLiveSignals() {
 
     const signals = getStoredSignals();
     if (signals.length === 0) {
-        container.innerHTML = `<p style="color: #718096; text-align: center; padding: 2rem;">No live signals broadcasted yet.</p>`;
+        container.innerHTML = `<p style="color: #718096; text-align: center; padding: 2rem;">No entry yet.</p>`;
         return;
     }
 

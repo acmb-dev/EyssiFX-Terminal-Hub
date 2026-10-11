@@ -195,3 +195,133 @@ aiText = aiText.replace(/```json/gi, '').replace(/```/gi, '').trim();
         });
     }
 });
+
+// --- BITCOIN (BTC) CHART & AI ANALYSIS LOGIC ---
+document.addEventListener('DOMContentLoaded', () => {
+    const btcNavBtn = document.querySelector('[data-target="btc-chart"]');
+    if (btcNavBtn) {
+        btcNavBtn.addEventListener('click', () => {
+            initBtcTradingView();
+        });
+    }
+
+    const btcSyncBtn = document.getElementById('btc-btn-chart-sync');
+    if (btcSyncBtn) {
+        btcSyncBtn.addEventListener('click', async () => {
+            const savedKey = localStorage.getItem('supreme_gemini_key');
+            if (!savedKey) {
+                alert("Please go to the Fundamental Analysis section and connect your Google Gemini API key first.");
+                return;
+            }
+
+            btcSyncBtn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right: 8px;"></i> Analyzing Bitcoin...';
+            document.getElementById('btc-smc-structure').textContent = "Scanning and Analyzing Bitcoin...";
+            document.getElementById('btc-buy-insight-text').textContent = "Analyzing key levels...";
+            document.getElementById('btc-sell-insight-text').textContent = "Scanning liquidity pools...";
+
+            try {
+                let liveBtcPrice = "$90,000.00";
+                try {
+                    const tdRes = await fetch('https://api.twelvedata.com/price?symbol=BTC/USD&apikey=312469dd3eda4f7e97d2853007361186');
+                    const tdData = await tdRes.json();
+                    if (tdData && tdData.price) {
+                        liveBtcPrice = `$${parseFloat(tdData.price).toFixed(2)}`;
+                    }
+                } catch (e) {
+                    console.warn("Twelve Data fallback used for BTC.");
+                }
+
+                const btcPrompt = `You are a professional Smart Money Concepts (SMC) trader analyzing Bitcoin (BTCUSD). The live price is ${liveBtcPrice}. Base all Support & Resistance, Order Blocks, Fair Value Gap, SMC, ICT, Fibonacci, Range & Deviation, Quasimodo, Price Action and Entry levels strictly around this current price. Return strictly a JSON object with this exact structure, NO markdown formatting, NO backticks:
+{
+  "marketBias": "2-4 Words",
+  "confidenceScore": "1-3 Words",
+  "smcStructure": "8-10 sentences analyzing Bitcoin market structure, BOS/CHoCH, Fair Value Gaps (FVG), and order blocks.",
+  "buyInsight": "1-2 concise sentences explaining specific support levels.",
+  "sellInsight": "1-2 concise sentences explaining specific resistance levels.",
+  "buySetupDesc": "Brief mitigation or setup description for buying BTC.",
+  "buyLot": "0.1 - 0.5 Base on the confidence",
+  "buyEntry": "Price",
+  "buySl": "Price",
+  "buyTp": "Price",
+  "sellSetupDesc": "Brief mitigation or setup description for selling BTC.",
+  "sellLot": "0.1 - 0.5 Base on the confidence",
+  "sellEntry": "Price",
+  "sellSl": "Price",
+  "sellTp": "Price"
+}`;
+
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${savedKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: btcPrompt }] }],
+                        generationConfig: { responseMimeType: "application/json" }
+                    })
+                });
+
+                const rawData = await response.json();
+                if (!response.ok) throw new Error(rawData.error?.message || "API Request Failed");
+
+                let aiText = rawData.candidates[0].content.parts[0].text;
+                aiText = aiText.replace(/```json/gi, '').replace(/```/gi, '').trim();
+                const aiData = JSON.parse(aiText);
+
+                // Populate UI Elements
+                document.getElementById('btc-market-bias').textContent = aiData.marketBias;
+                document.getElementById('btc-confidence-score').textContent = aiData.confidenceScore;
+                document.getElementById('btc-smc-structure').textContent = aiData.smcStructure;
+                document.getElementById('btc-buy-insight-text').textContent = aiData.buyInsight;
+                document.getElementById('btc-sell-insight-text').textContent = aiData.sellInsight;
+
+                document.getElementById('btc-buy-setup-desc').textContent = aiData.buySetupDesc || '';
+                document.getElementById('btc-buy-lot').textContent = aiData.buyLot || '0.01';
+                document.getElementById('btc-buy-entry').textContent = aiData.buyEntry || '--';
+                document.getElementById('btc-buy-sl').textContent = aiData.buySl || '--';
+                document.getElementById('btc-buy-tp').textContent = aiData.buyTp || '--';
+
+                document.getElementById('btc-sell-setup-desc').textContent = aiData.sellSetupDesc || '';
+                document.getElementById('btc-sell-lot').textContent = aiData.sellLot || '0.01';
+                document.getElementById('btc-sell-entry').textContent = aiData.sellEntry || '--';
+                document.getElementById('btc-sell-sl').textContent = aiData.sellSl || '--';
+                document.getElementById('btc-sell-tp').textContent = aiData.sellTp || '--';
+
+            } catch (error) {
+                console.error("BTC Sync Error:", error);
+                document.getElementById('btc-smc-structure').textContent = `Connection Error: ${error.message}`;
+            } finally {
+                btcSyncBtn.innerHTML = '<i class="fas fa-robot" style="margin-right: 8px;"></i> Sync Live Chart Insight';
+            }
+        });
+    }
+});
+
+function initBtcTradingView() {
+    const container = document.getElementById('btc-tv_chart_widget');
+    if (!container || container.innerHTML.trim() !== '') return;
+
+
+new TradingView.widget({
+        "autosize": true,
+        "symbol": "BINANCE:BTCUSDT",
+        "interval": "15", // 15 Minute timeframe default
+        "timezone": "Etc/UTC",
+        "theme": "dark",
+        "style": "1", // 1 = Candles
+        "locale": "en",
+        "enable_publishing": false,
+        "backgroundColor": "#0D0D0D", // Matches panel-bg
+        "gridColor": "rgba(255, 255, 255, 0.05)",
+        "hide_top_toolbar": false,
+        "hide_legend": false,
+        "save_image": false,
+        "container_id": "btc-tv_chart_widget",
+        "studies": [
+            "Volume@tv-basicstudies",
+            "MASimple@tv-basicstudies"
+        ],
+        "disabled_features": [
+            "header_symbol_search",
+            "header_compare"
+        ]
+    });
+}

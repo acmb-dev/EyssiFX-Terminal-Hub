@@ -433,7 +433,7 @@ Return strictly a JSON object with this structure, NO markdown formatting, NO ba
                 document.getElementById('smc-dashboard').style.opacity = "1";
 
                                 setTimeout(() => {
-                    btnChartSync.innerHTML = `<i class="fas fa-robot" style="margin-right: 8px;"></i> Sync Live Chart Insight`;
+                    btnChartSync.innerHTML = `<i class="fas fa-solid fa-magnifying-glass-dollar" style="margin-right: 8px;"></i> Sync Live Chart Insight`;
                 }, 3000);
             }
         });

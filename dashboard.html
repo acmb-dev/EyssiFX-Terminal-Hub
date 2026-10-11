@@ -14,6 +14,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- Your existing head tags (meta, title, links) -->
 
@@ -287,6 +288,59 @@
         </div>
     </div>
 </section>
+
+<!-- P&L TRACKER SECTION -->
+<section id="pnl" class="content-section" style="display: none; padding: 20px; color: #fff;">
+    
+    <!-- Top Filter Tabs -->
+<!-- Top Filter Tabs -->
+<div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 20px;">
+    <button class="pnl-tab" onclick="switchPnlFilter('week')" style="background: #1e222d; color: #a0aec0; border: 1px solid #363c4e; padding: 8px 24px; border-radius: 20px; cursor: pointer; font-weight: 600;">Week</button>
+    <button class="pnl-tab active-tab" onclick="switchPnlFilter('month')" style="background: #131722; color: #00C851; border: 1px solid #00C851; padding: 8px 24px; border-radius: 20px; cursor: pointer; font-weight: 600;">Month</button>
+    <button class="pnl-tab" onclick="switchPnlFilter('year')" style="background: #1e222d; color: #a0aec0; border: 1px solid #363c4e; padding: 8px 24px; border-radius: 20px; cursor: pointer; font-weight: 600;">Year</button>
+</div>
+
+    <!-- Month Navigation Header -->
+    <div style="display: flex; justify-content: space-between; align-items: center; max-width: 800px; margin: 0 auto 20px auto; font-size: 1.2rem; font-weight: bold;">
+        <button onclick="changeMonth(-1)" style="background: #1e222d; color: #d4af37; border: 1px solid #363c4e; padding: 6px 14px; border-radius: 6px; cursor: pointer;"><i class="fas fa-chevron-left"></i></button>
+        <span id="pnl-month-year-label">October 2026</span>
+        <button onclick="changeMonth(1)" style="background: #1e222d; color: #d4af37; border: 1px solid #363c4e; padding: 6px 14px; border-radius: 6px; cursor: pointer;"><i class="fas fa-chevron-right"></i></button>
+    </div>
+
+    <!-- Summary Cards Grid -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; max-width: 800px; margin: 0 auto 24px auto;">
+        <!-- Total P&L Card -->
+        <div style="background: #181c27; border: 1px solid #2a2e39; border-radius: 12px; padding: 20px;">
+            <div style="color: #a0aec0; font-size: 0.85rem; margin-bottom: 8px;">Total P&L</div>
+            <div id="pnl-total-amount" style="font-size: 2rem; font-weight: bold; color: #00C851;">$0.00</div>
+        </div>
+        <!-- Monthly Goal Card -->
+        <div style="background: #181c27; border: 1px solid #2a2e39; border-radius: 12px; padding: 20px; position: relative;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="color: #a0aec0; font-size: 0.85rem;">Monthly goal</span>
+                <i class="fas fa-pen" onclick="editMonthlyGoal()" style="color: #d4af37; cursor: pointer; font-size: 0.85rem;"></i>
+            </div>
+            <div id="pnl-goal-amount" style="font-size: 1.1rem; font-weight: bold; color: #fff; margin-bottom: 12px;">$0.00 <span id="pnl-goal-status" style="font-size: 0.75rem; color: #a0aec0; font-weight: normal;">Not set yet</span></div>
+            <!-- Progress Bar -->
+            <div style="background: #2a2e39; height: 8px; border-radius: 4px; overflow: hidden;">
+                <div id="pnl-goal-progress" style="background: #00C851; width: 0%; height: 100%; transition: width 0.3s;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Calendar Grid Wrapper -->
+    <div style="max-width: 800px; margin: 0 auto; background: #131722; border: 1px solid #2a2e39; border-radius: 12px; padding: 20px;">
+        <!-- Weekday Headers -->
+        <div style="display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; color: #a0aec0; font-size: 0.75rem; font-weight: bold; margin-bottom: 12px;">
+            <div>MON</div><div>TUE</div><div>WED</div><div>THU</div><div>FRI</div><div>SAT</div><div>SUN</div>
+        </div>
+        <!-- Days Container -->
+        <div id="pnl-calendar-days" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;">
+            <!-- Rendered dynamically via pnl.js -->
+        </div>
+    </div>
+
+</section> 
             
         <!-- VIEW: Winrate & History -->
 <section id="view-history" class="view-section">
@@ -768,6 +822,7 @@
 <script src="profile.js"></script>
 <script src="settings.js"></script>
 <script src="admin.js"></script>
+<script src="pnl.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </body>

@@ -244,7 +244,11 @@ function renderPnlTracker() {
         });
         periodEarned = totalPnl;
 
+        // 3. MONTHLY VIEW (Default Calendar Grid)
         daysContainer.style.gridTemplateColumns = 'repeat(7, 1fr)';
+        daysContainer.style.gap = '6px'; // Safe responsive gap
+        daysContainer.style.width = '100%';
+        daysContainer.style.boxSizing = 'border-box';
         daysContainer.innerHTML = '';
 
         const firstDayIndex = (new Date(year, month, 1).getDay() + 6) % 7;
@@ -264,8 +268,9 @@ function renderPnlTracker() {
             dayCell.style.aspectRatio = '1';
             dayCell.style.background = '#181c27';
             dayCell.style.border = '1px solid #2a2e39';
-            dayCell.style.borderRadius = '8px';
-            dayCell.style.padding = '8px';
+            dayCell.style.borderRadius = '6px';
+            dayCell.style.padding = '4px'; // Compact padding for mobile
+            dayCell.style.boxSizing = 'border-box'; // Prevents overflow
             dayCell.style.display = 'flex';
             dayCell.style.flexDirection = 'column';
             dayCell.style.justifyContent = 'space-between';
@@ -285,10 +290,9 @@ function renderPnlTracker() {
                 dayCell.style.background = val >= 0 ? 'rgba(0, 200, 81, 0.05)' : 'rgba(255, 68, 68, 0.05)';
             }
 
-            // Clean look: Journal text is hidden on card, viewable only by clicking date!
             dayCell.innerHTML = `
-                <div style="font-size: 0.8rem; color: #a0aec0; font-weight: bold;">${day}</div>
-                <div style="font-size: 0.95rem; font-weight: bold; text-align: center; color: ${pnlColor};">${pnlText}</div>
+                <div style="font-size: 0.7rem; color: #a0aec0; font-weight: bold;">${day}</div>
+                <div style="font-size: 0.75rem; font-weight: bold; text-align: center; color: ${pnlColor}; overflow: hidden; text-overflow: ellipsis;">${pnlText}</div>
                 <div></div>
             `;
 

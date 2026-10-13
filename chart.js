@@ -295,6 +295,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// FIND where window.syncAnalysisToLiveSignal is called in your BTC sync block and update it:
+if (typeof window.syncAnalysisToLiveSignal === 'function') {
+    window.syncAnalysisToLiveSignal(
+        aiData.recommendedDirection,
+        aiData.entry,
+        aiData.sl,
+        aiData.tp,
+        'BITCOIN' // <--- Ensures it records and broadcasts as BITCOIN
+    );
+    alert('🔥 BTC AI Setup Synced! Check the Live Signal Form.');
+}
+
+function initBtcTradingView() {
+    const container = document.getElementById('btc-tv_chart_widget');
+    if (!container || container.innerHTML.trim() !== '') return;
+
 function initBtcTradingView() {
     const container = document.getElementById('btc-tv_chart_widget');
     if (!container || container.innerHTML.trim() !== '') return;

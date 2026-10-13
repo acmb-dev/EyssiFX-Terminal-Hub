@@ -181,7 +181,7 @@ async function syncForexFactoryData() {
 
     async function runGeminiSync(apiKey) {
         // UI Loading State
-        btnAnalyze.innerHTML = `<i class="fas fa-spinner fa-spin" style="margin-right: 8px;"></i> Syncing with Google Gemini...`;
+        btnAnalyze.innerHTML = `<i class="fas fa-spinner fa-spin" style="margin-right: 8px;"></i> Syncing with Institutions...`;
         document.getElementById('ai-insight-cards').style.opacity = "0.4";
         document.getElementById('gold-title').textContent = "ANALYZING...";
         document.getElementById('dxy-title').textContent = "ANALYZING...";

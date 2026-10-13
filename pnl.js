@@ -256,12 +256,14 @@ else {
 
         // 3. MONTHLY VIEW (Default Calendar Grid)
         // Ensure daysContainer has these properties:
+// 3. MONTHLY VIEW (Default Calendar Grid)
 daysContainer.style.display = 'grid';
-daysContainer.style.gridTemplateColumns = 'repeat(7, 1fr)';
-daysContainer.style.gap = '4px'; // Tighter gap for mobile screens
+daysContainer.style.gridTemplateColumns = 'repeat(7, 1fr)'; // <--- Resets grid back to 7 columns
+daysContainer.style.gap = '6px';
 daysContainer.style.width = '100%';
 daysContainer.style.maxWidth = '100%';
 daysContainer.style.boxSizing = 'border-box';
+daysContainer.innerHTML = ''; // <--- Clears any leftover cards from Week/Year views
 
         const firstDayIndex = (new Date(year, month, 1).getDay() + 6) % 7;
         const totalDaysInMonth = new Date(year, month + 1, 0).getDate();

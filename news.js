@@ -256,7 +256,7 @@ async function syncForexFactoryData() {
             
             // Reset button text after 3 seconds
             setTimeout(() => {
-                btnAnalyze.innerHTML = `<i class="fas fa-robot" style="margin-right: 8px;"></i> Sync Live AI Market Analysis`;
+                btnAnalyze.innerHTML = `<i class="fas fa-solid fa-magnifying-glass-dollar" style="margin-right: 8px;"></i> Sync Live Market Analysis`;
             }, 3000);
         }
     }

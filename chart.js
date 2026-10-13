@@ -309,23 +309,19 @@ if (typeof window.syncAnalysisToLiveSignal === 'function') {
 
 function initBtcTradingView() {
     const container = document.getElementById('btc-tv_chart_widget');
-    if (!container || container.innerHTML.trim() !== '') return;
+    if (!container) return;
+    container.innerHTML = ""; // Clear container to prevent duplicate widgets
 
-function initBtcTradingView() {
-    const container = document.getElementById('btc-tv_chart_widget');
-    if (!container || container.innerHTML.trim() !== '') return;
-
-
-new TradingView.widget({
+    new TradingView.widget({
         "autosize": true,
         "symbol": "BINANCE:BTCUSDT",
-        "interval": "15", // 15 Minute timeframe default
+        "interval": "15",
         "timezone": "Etc/UTC",
         "theme": "dark",
-        "style": "1", // 1 = Candles
+        "style": "1",
         "locale": "en",
         "enable_publishing": false,
-        "backgroundColor": "#0D0D0D", // Matches panel-bg
+        "backgroundColor": "#0D0D0D",
         "gridColor": "rgba(255, 255, 255, 0.05)",
         "hide_top_toolbar": false,
         "hide_legend": false,
@@ -341,3 +337,13 @@ new TradingView.widget({
         ]
     });
 }
+
+// Ensure BTC chart initializes when its tab is clicked
+document.addEventListener('DOMContentLoaded', () => {
+    const btcNavBtn = document.querySelector('[data-target="btc-chart"]');
+    if (btcNavBtn) {
+        btcNavBtn.addEventListener('click', () => {
+            setTimeout(initBtcTradingView, 100);
+        });
+    }
+});

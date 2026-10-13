@@ -105,7 +105,7 @@ function renderPnlTracker() {
     // ==========================================
     // 1. YEARLY VIEW
     // ==========================================
-    if (activePnlFilter === 'year') {
+if (activePnlFilter === 'year') {
         if (label) label.innerText = `${year} Yearly Overview`;
         goalTitleText = 'Yearly goal';
         goalKey = `year_${year}`;
@@ -119,9 +119,14 @@ function renderPnlTracker() {
         });
         periodEarned = totalPnl;
 
-        // Render 12 Months Grid
-        daysContainer.style.gridTemplateColumns = 'repeat(3, 1fr)';
-        daysContainer.innerHTML = '';
+// REPLACE lines 122-123 with this:
+daysContainer.style.display = 'grid';
+daysContainer.style.gridTemplateColumns = 'repeat(3, 1fr)';
+daysContainer.style.gap = '6px';
+daysContainer.style.width = '100%';
+daysContainer.style.maxWidth = '100%';
+daysContainer.style.boxSizing = 'border-box';
+daysContainer.innerHTML = '';
 
         monthNames.forEach((mName, mIdx) => {
             let monthPnl = 0;
@@ -140,6 +145,10 @@ function renderPnlTracker() {
             mCard.style.textAlign = 'center';
             mCard.style.cursor = 'pointer';
             mCard.style.transition = 'border-color 0.2s';
+            // ADD these lines inside the mCard style definitions (around line 136-143):
+mCard.style.boxSizing = 'border-box';
+mCard.style.minWidth = '0';
+mCard.style.overflow = 'hidden';
 
             mCard.onmouseover = () => mCard.style.borderColor = '#d4af37';
             mCard.onmouseout = () => mCard.style.borderColor = '#2a2e39';
@@ -231,7 +240,8 @@ function renderPnlTracker() {
     // ==========================================
     // 3. MONTHLY VIEW (Default Calendar Grid)
     // ==========================================
-    else {
+    
+else {
         if (label) label.innerText = `${monthNames[month]} ${year}`;
         goalTitleText = 'Monthly goal';
         goalKey = `${year}-${String(month + 1).padStart(2, '0')}`;
@@ -245,11 +255,13 @@ function renderPnlTracker() {
         periodEarned = totalPnl;
 
         // 3. MONTHLY VIEW (Default Calendar Grid)
-        daysContainer.style.gridTemplateColumns = 'repeat(7, 1fr)';
-        daysContainer.style.gap = '6px'; // Safe responsive gap
-        daysContainer.style.width = '100%';
-        daysContainer.style.boxSizing = 'border-box';
-        daysContainer.innerHTML = '';
+        // Ensure daysContainer has these properties:
+daysContainer.style.display = 'grid';
+daysContainer.style.gridTemplateColumns = 'repeat(7, 1fr)';
+daysContainer.style.gap = '4px'; // Tighter gap for mobile screens
+daysContainer.style.width = '100%';
+daysContainer.style.maxWidth = '100%';
+daysContainer.style.boxSizing = 'border-box';
 
         const firstDayIndex = (new Date(year, month, 1).getDay() + 6) % 7;
         const totalDaysInMonth = new Date(year, month + 1, 0).getDate();
@@ -276,6 +288,10 @@ function renderPnlTracker() {
             dayCell.style.justifyContent = 'space-between';
             dayCell.style.cursor = 'pointer';
             dayCell.style.transition = 'border-color 0.2s';
+            // Add these to your dayCell and monthCell style definitions:
+dayCell.style.minWidth = '0';
+dayCell.style.boxSizing = 'border-box';
+dayCell.style.overflow = 'hidden';
 
             dayCell.onmouseover = () => dayCell.style.borderColor = '#d4af37';
             dayCell.onmouseout = () => dayCell.style.borderColor = '#2a2e39';
@@ -298,8 +314,7 @@ function renderPnlTracker() {
 
             dayCell.onclick = () => openDayEditor(dateString, dayRecord);
             daysContainer.appendChild(dayCell);
-        }
-    }
+        }}
 
     // Display Total P&L
     totalAmountEl.innerText = `${totalPnl >= 0 ? '+' : ''}$${totalPnl.toFixed(2)}`;

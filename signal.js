@@ -119,52 +119,50 @@ function calculateRR(entry, sl, tp) {
 
 function calculatePips(signal) {
     const entry = parseFloat(signal.entry);
-    const sl = parseFloat(signal.sl);
+    const s1 = parseFloat(signal.s1);
     const tp1 = parseFloat(signal.tp1);
-    const tp8 = signal.tp8 ? parseFloat(signal.tp8) : tp1;
-    const isBuy = signal.direction === 'BUY';
+    const isBuy = (signal.direction || '').toUpperCase() === 'BUY';
+
+    if (isNaN(entry)) return 0;
 
     let diff = 0;
-    if (signal.status.includes('TP Hit') || /TP[1-8] Hit/.test(signal.status)) {
-        // Automatically determine which exact TP level was hit
-        const tpLevel = signal.status.match(/TP([1-8])/);
-        let target = tp8; // Default
-        
-        if (tpLevel) {
-            if (tpLevel[1] === '1') target = tp1;
-            if (tpLevel[1] === '2') target = signal.tp2 ? parseFloat(signal.tp2) : tp1;
-            if (tpLevel[1] === '3') target = signal.tp3 ? parseFloat(signal.tp3) : tp1;
-            if (tpLevel[1] === '4') target = signal.tp4 ? parseFloat(signal.tp4) : tp1;
-            if (tpLevel[1] === '5') target = signal.tp5 ? parseFloat(signal.tp5) : tp1;
-            if (tpLevel[1] === '6') target = signal.tp6 ? parseFloat(signal.tp6) : tp1;
-            if (tpLevel[1] === '7') target = signal.tp7 ? parseFloat(signal.tp7) : tp1;
-            if (tpLevel[1] === '8') target = tp8;
+    const status = (signal.status || '').toUpperCase();
+
+    if (status.includes('TP') || status.includes('TAKE PROFIT')) {
+        let target = isNaN(tp1) ? entry : tp1;
+        for (let i = 1; i <= 8; i++) {
+            if (status.includes(`TP${i}`)) {
+                const tpVal = parseFloat(signal[`tp${i}`]);
+                if (!isNaN(tpVal)) target = tpVal;
+            }
         }
         diff = isBuy ? (target - entry) : (entry - target);
-        
-    } else if (signal.status.includes('Early TP')) {
-        // Extract your custom exit price from the text (e.g., "Early TP @ 4250.50")
-        const matchedPrice = signal.status.match(/@\s*([0-9.]+)/);
+    } else if (status.includes('EARLY TP')) {
+        const matchedPrice = status.match(/@\s*([0-9.]+)/);
         const exitPrice = matchedPrice ? parseFloat(matchedPrice[1]) : entry;
         diff = isBuy ? (exitPrice - entry) : (entry - exitPrice);
-        
-    } else if (signal.status === 'Stop Loss Hit') {
-        diff = isBuy ? (sl - entry) : (entry - sl);
-        
+    } else if (status.includes('STOP LOSS')) {
+        const stopPrice = isNaN(s1) ? entry : s1;
+        diff = isBuy ? (stopPrice - entry) : (entry - stopPrice);
     } else {
-        return 0; // Active or Disregarded
+        return 0;
     }
 
-
-    const multiplier = signal.pair === 'XAUUSD' ? 10 : 1;
-    return Math.round(diff * multiplier);
+    let multiplier = 1;
+    if (signal.pair === 'BITCOIN' || signal.pair === 'BTCUSD' || (signal.pair && signal.pair.includes('BTC'))) {
+        multiplier = 0.1;
+    } else if (signal.pair === 'XAUUSD') {
+        multiplier = 10;
+    }
+    
+    const pips = Math.round(diff * multiplier);
+    return isNaN(pips) ? 0 : pips;
 }
 
 // --- SYNC AI ANALYSIS TO LIVE SIGNAL FORM (SUPPORT FOR ENTRY AREAS) ---
-window.syncAnalysisToLiveSignal = function(direction, entry, sl, masterTp) {
+// UPDATE your window.syncAnalysisToLiveSignal definition to accept pairName:
+window.syncAnalysisToLiveSignal = function(direction, entry, sl, masterTp, pairName = 'XAUUSD') {
     const rawEntry = String(entry).trim();
-    
-    // Extract the primary price for calculations (takes the number before the dash)
     const entryPrice = parseFloat(rawEntry.split('-')[0].trim());
     const stopLoss = parseFloat(String(sl).replace(/[^0-9.]/g, ''));
     const takeProfit = parseFloat(String(masterTp).replace(/[^0-9.]/g, ''));
@@ -174,7 +172,6 @@ window.syncAnalysisToLiveSignal = function(direction, entry, sl, masterTp) {
         return;
     }
 
-    // Calculate TP levels based on primary entry price
     const tpDistance = takeProfit - entryPrice;
     const tp1 = entryPrice + (tpDistance * 0.13);
     const tp2 = entryPrice + (tpDistance * 0.25);
@@ -185,20 +182,18 @@ window.syncAnalysisToLiveSignal = function(direction, entry, sl, masterTp) {
     const tp7 = entryPrice + (tpDistance * 0.88);
     const tp8 = takeProfit;
 
-    // Helper function to assign values to input fields
     const setInputValue = (id, val) => {
         const el = document.getElementById(id);
         if (el) el.value = val;
     };
 
-    // Update Dropdowns
-    const dirEl = document.getElementById('sig-direction');
-    if (dirEl) dirEl.value = (direction || 'BUY').toUpperCase();
+    const d1El = document.getElementById('sig-direction');
+    if (d1El) d1El.value = (direction || 'BUY').toUpperCase();
 
+    // Sets the pair dropdown to BITCOIN or XAUUSD dynamically
     const pairEl = document.getElementById('sig-pair');
-    if (pairEl) pairEl.value = 'XAUUSD';
+    if (pairEl) pairEl.value = pairName;
 
-    // Inject Values (Keeps full text range in sig-entry)
     setInputValue('sig-entry', rawEntry);
     setInputValue('sig-sl', stopLoss.toFixed(2));
     setInputValue('sig-tp1', tp1.toFixed(2));

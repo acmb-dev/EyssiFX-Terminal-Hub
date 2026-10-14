@@ -192,7 +192,7 @@ async function syncForexFactoryData() {
 {"goldTitle":"BULLISH / SLIGHTLY BULLISH / NEUTRAL / SLIGHTLY BEARISH / BEARISH","goldDesc":"7 short sentence explaining why","dxyTitle":"BULLISH / SLIGHTLY BULLISH / NEUTRAL / SLIGHTLY BEARISH / BEARISH","dxyDesc":"7 short sentence explaining why","advisoryTitle":"3-5 word advice","advisoryDesc":"7 actionable sentence","fearValue":number 1-100,"fearText":"GREED or FEAR","fearDesc":"7 short sentence explanation"} What are the latest fundamental factors and events that could affect the price of gold (XAUUSD) right now? Please analyze the latest developments in the U.S. economy, Federal Reserve and interest-rate expectations, inflation, employment data, U.S. Dollar (DXY), Treasury yields, geopolitical events, central-bank gold purchases, and other major economic or global events. Explain whether each factor is potentially bullish or bearish for gold, and identify which factors are currently having the strongest influence on XAUUSD? Provide the JSON response.`;
 
             // Call the 100% free Gemini API endpoint
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`, {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -364,7 +364,7 @@ Return strictly a JSON object with this structure, NO markdown formatting, NO ba
   "sellScenario": { "condition": "Setup trigger", "entry": "Price", "sl": "Price", "tp": "Price" }
 }`;
 
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${savedKey}`, {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${savedKey}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({

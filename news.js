@@ -360,6 +360,8 @@ Return strictly a JSON object with this structure, NO markdown formatting, NO ba
   "supportResistance": "Key support and resistance ranges",
   "liquidityZones": "Important liquidity pools",
   "smcAnalysis": "8-10 sentences explaining market structure",
+  "buyLot": "0.01 - 0.1 (Based on the confidence)"
+  "sellLot": "0.01 - 0.1 (Based on the confidence)"
   "buyScenario": { "condition": "Setup trigger", "entry": "Price", "sl": "Price", "tp": "Price" },
   "sellScenario": { "condition": "Setup trigger", "entry": "Price", "sl": "Price", "tp": "Price" }
 }`;

@@ -355,8 +355,8 @@ The live price is ${livePriceText}. Base all Support & Resistance, Order Blocks,
 
 Return strictly a JSON object with this structure, NO markdown formatting, NO backticks:
 {
-  "bias": "2-4 Words",
-  "confidence": "2-4 Words",
+  "bias": "2-4 Words. Determine the market bias based on higher- and lower-timeframe market structure, BOS/CHoCH, liquidity sweeps, price action, momentum, and confluence from support/resistance, order blocks, FVGs, and Fibonacci levels; assign a strong bias only when multiple independent signals align, use Neutral / Ranging when direction is unclear, and Wait for Confirmation when a potential setup lacks a valid entry trigger.",
+  "confidence": "1-3 Words. Rate the analysis based on the alignment of multi-timeframe market structure, liquidity behavior, price action, momentum, and confluence; assign higher confidence only when multiple independent signals agree and reliable market data is available, and lower confidence when signals conflict, confirmation is missing, or data is insufficient.",
 "supportResistance": "2-3 sentences. Identify key support and resistance zones",
 "liquidityZones": "2-3 sentences. Identify Buy-Side Liquidity (BSL), Sell-Side Liquidity (SSL), internal/external range liquidity (IRL/ERL), and potential liquidity sweeps."
   "smcAnalysis": "8-10 sentences explaining market structure, Base all Support & Resistance, Order Blocks, Fair Value Gap, SMC, ICT, Fibonacci (Golden Zone), Range & Deviation, Inducement, Threshold Level, Opening/Close Level (varies), Quasimodo / Quasimodo Pattern, Price Action,  equal highs/lows (EQH/EQL), previous day/week/month highs and lows, session highs/lows. PROVIDE THE SPECIFIC PRICE",

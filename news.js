@@ -350,18 +350,18 @@ document.addEventListener("DOMContentLoaded", () => {
             console.warn("Twelve Data fetch bypassed, using default chart baseline.");
         }
 
-                const smcPrompt = `You are a professional Smart Money Concepts (SMC) trader analyzing ${selectedAsset}. 
-The live price is ${livePriceText}. Base all Support & Resistance, Order Blocks, Fair Value Gap, SMC, ICT, Fibonacci (Golden Zone), Range & Deviation, Inducement, Threshold Level, Opening/Close Level (varies), Quasimodo / Quasimodo Pattern, Price Action and Entry/SL/TP levels strictly around this current price. 
+                const smcPrompt = `You are a professional trader analyzing ${selectedAsset}. 
+The live price is ${livePriceText}. Base all Support & Resistance, Order Blocks, Fair Value Gap, SMC, ICT, Fibonacci (Golden Zone), Range & Deviation, Inducement, Threshold Level, Opening/Close Level (varies), Quasimodo / Quasimodo Pattern, Price Action,  equal highs/lows (EQH/EQL), previous day/week/month highs and lows, session highs/lows and Entry/SL/TP levels strictly around this current price. 
 
 Return strictly a JSON object with this structure, NO markdown formatting, NO backticks:
 {
   "bias": "2-4 Words",
-  "confidence": "1-3 Words",
-  "supportResistance": "Key support and resistance ranges",
-  "liquidityZones": "Important liquidity pools",
-  "smcAnalysis": "8-10 sentences explaining market structure",
-  "buyLot": "0.01 - 0.1 (Based on the confidence)"
-  "sellLot": "0.01 - 0.1 (Based on the confidence)"
+  "confidence": "2-4 Words",
+"supportResistance": "2-3 sentences. Identify key support and resistance zones",
+"liquidityZones": "2-3 sentences. Identify Buy-Side Liquidity (BSL), Sell-Side Liquidity (SSL), internal/external range liquidity (IRL/ERL), and potential liquidity sweeps."
+  "smcAnalysis": "8-10 sentences explaining market structure, Base all Support & Resistance, Order Blocks, Fair Value Gap, SMC, ICT, Fibonacci (Golden Zone), Range & Deviation, Inducement, Threshold Level, Opening/Close Level (varies), Quasimodo / Quasimodo Pattern, Price Action,  equal highs/lows (EQH/EQL), previous day/week/month highs and lows, session highs/lows. PROVIDE THE SPECIFIC PRICE",
+  "buyLot": "0.01 - 0.05 (Based on the confidence) HIGH: 0.04-0.05, LOW: 0.01-0.03",
+  "sellLot": "0.01 - 0.05 (Based on the confidence) HIGH: 0.04-0.05, LOW: 0.01-0.03",
   "buyScenario": { "condition": "Setup trigger", "entry": "Price", "sl": "Price", "tp": "Price" },
   "sellScenario": { "condition": "Setup trigger", "entry": "Price", "sl": "Price", "tp": "Price" }
 }`;

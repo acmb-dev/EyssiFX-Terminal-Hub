@@ -81,6 +81,7 @@
                 <a href="#" class="nav-link" data-target="fundamentals"><i class="fas fa-newspaper"></i> Fundamental Analysis</a>
                 <a href="#" class="nav-link" data-target="pnl"><i class="fas fa-solid fa-calendar-days" style="margin-right: 8px;"></i> PnL Tracker</a>
                 <a href="#" class="nav-link" data-target="history"><i class="fas fa-history"></i> Winrate & History</a>
+                <a href="#" class="nav-link" data-target="course-section"><i class="fas fa-graduation-cap" style="margin-right: 8px;"></i>Trading Course</a>
             </nav>
 
  <!-- NEW LOGOUT BUTTON (Place at the bottom of your sidebar) -->
@@ -98,6 +99,17 @@
                 <h2><span class="text-gold">TRADE</span>BARR</h2>
                 <button id="mobile-menu-btn"><i class="fas fa-bars"></i></button>
             </div>
+
+        <!-- TRADING COURSE VIEW SECTION -->
+    <div id="course-section" class="view-section" style="display: none; padding: 20px;">
+        <div class="section-header" style="margin-bottom: 20px;">
+            <h2 style="color: #fff; font-size: 22px;"><i class="fas fa-graduation-cap" style="color: #f39c12; margin-right: 10px;"></i> Trade Barr Academy</h2>
+            <p style="color: #aaa; font-size: 14px;">Master XAUUSD across 6 structured weeks.</p>
+        </div>
+
+        <!-- The dynamic 6-week course layout from course.js will inject here -->
+        <div id="course-dynamic-container"></div>
+    </div>
             
 <!-- ================= VIEW: MAIN DASHBOARD HUB ================= -->
 <section id="view-dashboard" class="view-section active">
@@ -905,6 +917,7 @@
 <script src="admin.js"></script>
 <script src="pnl.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="course.js"></script>
 
 </body>
 </html>

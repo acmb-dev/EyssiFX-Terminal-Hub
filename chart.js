@@ -233,18 +233,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const btcPrompt = `You are a professional Smart Money Concepts (SMC) trader analyzing Bitcoin (BTCUSD). The live price is ${liveBtcPrice}. Base all Support & Resistance, Order Blocks, Fair Value Gap, SMC, ICT, Fibonacci, Range & Deviation, Quasimodo, Price Action and Entry levels strictly around this current price. Return strictly a JSON object with this exact structure, NO markdown formatting, NO backticks:
 {
-  "marketBias": "2-4 Words",
-  "confidenceScore": "1-3 Words",
-  "smcStructure": "8-10 sentences analyzing Bitcoin market structure, BOS/CHoCH, Fair Value Gaps (FVG), and order blocks.",
-  "buyInsight": "1-2 concise sentences explaining specific support levels.",
-  "sellInsight": "1-2 concise sentences explaining specific resistance levels.",
-  "buySetupDesc": "Brief mitigation or setup description for buying BTC.",
-  "buyLot": "0.1 - 0.5 Base on the confidence",
+   "marketBias": "4 Words. Determine the market bias based on higher- and lower-timeframe market structure, BOS/CHoCH, liquidity sweeps, price action, momentum, and confluence from support/resistance, order blocks, FVGs, and Fibonacci levels; assign a strong bias only when multiple independent signals align, use Neutral / Ranging when direction is unclear, and Wait for Confirmation when a potential setup lacks a valid entry trigger.",
+  "confidenceScore": "3 Words. Rate the analysis based on the alignment of multi-timeframe market structure, liquidity behavior, price action, momentum, and confluence; assign higher confidence only when multiple independent signals agree and reliable market data is available, and lower confidence when signals conflict, confirmation is missing, or data is insufficient.",
+  "smcStructure": "8-10 sentences explaining market structure, Base all Support & Resistance, Order Blocks, Fair Value Gap, SMC, ICT, Fibonacci (Golden Zone), Range & Deviation, Inducement, Threshold Level, Opening/Close Level (varies), Quasimodo / Quasimodo Pattern, Price Action,  equal highs/lows (EQH/EQL), previous day/week/month highs and lows, session highs/lows. PROVIDE THE SPECIFIC PRICE",
+  "buyInsight": "2-3 sentences. Identify key support and resistance zones with specific prices",
+  "sellInsight": "2-3 sentences. Identify Buy-Side Liquidity (BSL), Sell-Side Liquidity (SSL), internal/external range liquidity (IRL/ERL), and potential liquidity sweeps. woth specific prices",
+  "buySetupDesc": "1-2 concise sentences explaining for buy entries based on the analysis in marketBias, confidence Score, smcStructure, buyInsight and sellInsight",
+  "buyLot": "0.1 - 2 Base on the confidence",
   "buyEntry": "Price",
   "buySl": "Price",
   "buyTp": "Price",
-  "sellSetupDesc": "Brief mitigation or setup description for selling BTC.",
-  "sellLot": "0.1 - 0.5 Base on the confidence",
+  "sellSetupDesc": "1-2 concise sentences explaining for sell entries based on the analysis in marketBias, confidence Score, smcStructure, buyInsight and sellInsight",
+  "sellLot": "0.1 - 2  Base on the confidence",
   "sellEntry": "Price",
   "sellSl": "Price",
   "sellTp": "Price"

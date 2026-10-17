@@ -361,6 +361,28 @@ document.addEventListener('DOMContentLoaded', () => {
 const nasdaqSyncBtn = document.getElementById('nasdaq-btn-chart-sync');
 if (nasdaqSyncBtn) {
     nasdaqSyncBtn.addEventListener('click', async () => {
+            // --- PHT TIME RESTRICTION CHECK ---
+        const nowPht = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Manila" }));
+        const currentHours = nowPht.getHours();
+        const currentMinutes = nowPht.getMinutes();
+        const totalMinutes = currentHours * 60 + currentMinutes;
+
+        // Allowed PHT slots in minutes from midnight (with a 15-minute window for each):
+        // 1. 8:00 AM = 480 mins (Allowed: 08:00 - 08:15)
+        // 2. 3:30 PM = 930 mins (Allowed: 15:30 - 15:45)
+        // 3. 9:30 PM = 1290 mins (Allowed: 21:30 - 21:45)
+        const allowedSlots = [
+            { start: 480, end: 495, label: "8:00 AM PHT" },
+            { start: 930, end: 945, label: "3:30 PM PHT" },
+            { start: 1290, end: 1305, label: "9:30 PM PHT" }
+        ];
+
+        const isValidTime = allowedSlots.some(slot => totalMinutes >= slot.start && totalMinutes <= slot.end);
+
+        if (!isValidTime) {
+            alert('⚠️ NASDAQ chart insight can only be synced at 8:00 AM, 3:30 PM, and 9:30 PM PHT.');
+            return;
+        }
         const savedKey = localStorage.getItem('supreme_gemini_key');
         if (!savedKey) {
             alert('Please go to the Fundamental Analysis section and connect your Google Gemini API key first.');
@@ -374,7 +396,7 @@ if (nasdaqSyncBtn) {
         try {
             let liveNasPrice = '20,000.00';
             try {
-                const twRes = await fetch('https://api.twelvedata.com/price?symbol=IXIC&apikey=3124690d3ede4f7w97d2853007361186');
+                const twRes = await fetch('https://api.twelvedata.com/price?symbol=IXIC&apikey=8b567cde22204705a0071bc156e37846');
                 const twData = await twRes.json();
                 if (twData && twData.price) {
                     liveNasPrice = `$${parseFloat(twData.price).toFixed(2)}`;
@@ -383,7 +405,7 @@ if (nasdaqSyncBtn) {
                 console.warn('Twelve Data fallback used for NASDAQ.');
             }
 
-            const nasdaqPrompt = `You are a professional Smart Money Concepts (SMC) trader analyzing NASDAQ 100 (NAS100). The current baseline reference price is approximately ${liveNasPrice}. Base all Support & Resistance, Order Blocks, Fair Value Gap, SMC, ICT, Fibonacci, Range & Deviation, Quasimodo, Price Action and Entry levels strictly around this current price. Return strictly a JSON object formatted exactly like this, with no markdown, no code blocks, and no extra text:
+            const nasdaqPrompt = `You are a professional trader who trades positioning scalping to intraday analyzing EURUSD. The live price is ${liveNasPrice}. Base all Support & Resistance, Order Blocks, Fair Value Gap, SMC, ICT, Fibonacci (Golden Zone), Range & Deviation, Inducement, Threshold Level, Opening/Close Level (varies), Quasimodo / Quasimodo Pattern, Price Action,  equal highs/lows (EQH/EQL), previous day/week/month highs and lows, session highs/lows and Entry/SL/TP levels strictly around this current price. 
 
 {
   "marketBias": "4 Words. Determine the market bias based on higher- and lower-timeframe market structure, BOS/CHoCH, liquidity sweeps, price action, momentum, and confluence from support/resistance, order blocks, FVG, and Fibonacci levels; assign a strong bias only when multiple independent signals align, use Neutral / Ranging when direction is unclear, and Wait for Confirmation when a potential setup lacks a valid entry trigger.",

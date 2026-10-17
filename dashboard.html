@@ -78,6 +78,7 @@
                 <a href="#" class="nav-link" data-target="signal"><i class="fas fa-location-crosshairs"></i> Entry Tracker </a>
                 <a href="#" class="nav-link" data-target="chart-analysis"><i class="fas fa-solid fa-ring"></i> Live Chart (XAUUSD)</a>
                 <a href="#" class="nav-link" data-target="btc-chart"><i class="fas fa-solid fa-coins" style="margin-right: 8px;"></i> Live Chart (BTC)</a>
+                <a href="#" class="nav-link" data-target="nasdaq-chart"><i class="fas fa-chart-line" style="margin-right: 8px;"></i>Live Chart (NAS100)</a>
                 <a href="#" class="nav-link" data-target="fundamentals"><i class="fas fa-newspaper"></i> Fundamental Analysis</a>
                 <a href="#" class="nav-link" data-target="pnl"><i class="fas fa-solid fa-calendar-days" style="margin-right: 8px;"></i> PnL Tracker</a>
                 <a href="#" class="nav-link" data-target="history"><i class="fas fa-history"></i> Winrate & History</a>
@@ -377,6 +378,85 @@
             <span>ENTRY: <strong id="btc-sell-entry" style="color: #fff;">--</strong></span>
             <span>SL: <strong id="btc-sell-sl" style="color: #ff4444;">--</strong></span>
             <span>TP: <strong id="btc-sell-tp" style="color: #00C851;">--</strong></span>
+        </div>
+    </div>
+</div>
+</section>
+
+<!-- NAS100 LIVE CHART & AI ANALYSIS SECTION -->
+ <section id="nasdaq-chart" class="content-section">
+                <div class="view-header">
+                    <h3><p style= "color: var(--gold)">READ, ANALYZE, PLAN & EXECUTE</p></h3>
+                    <div class="asset-switcher">
+                    </div></div>
+                <div class="tv-container glass-panel" id="nasdaq-tv_chart_widget"></div>
+                <div class="signals-layout">
+<div id="ai-chart-insights" style="margin-top: 0rem; display: flex; flex-direction: column; gap: 1rem; padding-bottom: 2rem;">
+    <div style="text-align: center; margin: 0rem 0 1rem 0;">
+    <button id="nasdaq-btn-chart-sync" style="background: rgba(212, 175, 55, 0.1); border: 1px solid var(--gold); color: var(--gold); padding: 12px 24px; font-family: 'Poppins', sans-serif; font-size: 0.9rem; font-weight: 600; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.15);">
+        <i class="fas fa-solid fa-magnifying-glass-dollar" style="margin-right: 8px;"></i> Sync Live Chart Insight
+    </button></div>
+
+    <!-- Status & Confidence Grid -->
+   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem;">
+        <div class="glass-panel" style="padding: 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); text-align: center;">
+            <p style="font-size: 0.75rem; color: #a0aec0; margin: 0 0 4px 0; letter-spacing: 1px;">MARKET STATUS</p>
+            <h4 id="nasdaq-market-bias" style="margin: 0; font-size: 1.1rem; color: var(--gold);">AWAITING SYNC</h4>
+        </div>
+       <div class="glass-panel" style="padding: 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); text-align: center;">
+            <p style="font-size: 0.75rem; color: #a0aec0; margin: 0 0 4px 0; letter-spacing: 1px;">CONFIDENCE</p>
+            <h4 id="nasdaq-confidence-score" style="margin: 0; font-size: 1.1rem; color: #fff;">AWAITING SYNC</h4>
+        </div>
+    </div>
+
+    <!-- Market Insight Panel -->
+    <div class="glass-panel" style="padding: 1.2rem; border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.3);">
+        <h4 style="color: var(--gold); margin: 0 0 10px 0; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px;">
+            <i class="fas fa-microscope" style="margin-right: 6px;"></i> Market Insight
+        </h4>
+        <p id="nasdaq-smc-structure" style="color: #cbd5e0; font-size: 0.85rem; line-height: 1.6; margin: 0 0 12px 0;">
+            Click "Sync Live Chart Insight" to analyze market.
+        </p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.8rem; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 10px;">
+            <div>
+                <strong style="color: #a0aec0;">Key Support & Resistance:</strong>
+                <p id="nasdaq-buy-insight-text" style="color: #fff; margin: 4px 0 0 0;">--</p>
+            </div>
+            <div>
+                <strong style="color: #a0aec0;">Liquidity Zones:</strong>
+                <p id="nasdaq-sell-insight-text" style="color: #fff; margin: 4px 0 0 0;">--</p>
+            </div>
+        </div>
+    </div>
+
+<!-- Buy & Setup Cards Grid (Matching XAUUSD Layout) -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+    
+    <!-- Buy Setup Card -->
+    <div style="background: rgba(0, 200, 81, 0.04); border: 1px solid rgba(0, 200, 81, 0.25); border-left: 4px solid #00C851; border-radius: 8px; padding: 16px;">
+        <h4 style="color: #00C851; margin: 0 0 8px 0; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">
+            <i class="fas fa-arrow-alt-circle-up" style="margin-right: 6px;"></i> High-Probability Buy Setup
+        </h4>
+        <p id="nasdaq-buy-setup-desc" style="color: #a0aec0; font-size: 0.82rem; line-height: 1.5; margin: 0 0 12px 0;">Awaiting analysis...</p>
+        <div style="display: flex; justify-content: space-between; font-size: 0.75rem; background: rgba(0,0,0,0.3); padding: 8px; border-radius: 6px; font-family: monospace;">
+            <span>LOT: <strong id="nasdaq-buy-lot" style="color: #d4af37;">--</strong></span>
+            <span>ENTRY: <strong id="nasdaq-buy-entry" style="color: #fff;">--</strong></span>
+            <span>SL: <strong id="nasdaq-buy-sl" style="color: #ff4444;">--</strong></span>
+            <span>TP: <strong id="nasdaq-buy-tp" style="color: #00C851;">--</strong></span>
+        </div>
+    </div>
+
+    <!-- Sell Setup Card -->
+    <div style="background: rgba(255, 68, 68, 0.04); border: 1px solid rgba(255, 68, 68, 0.25); border-left: 4px solid #ff4444; border-radius: 8px; padding: 16px;">
+        <h4 style="color: #ff4444; margin: 0 0 8px 0; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">
+            <i class="fas fa-arrow-alt-circle-down" style="margin-right: 6px;"></i> High-Probability Sell Setup
+        </h4>
+        <p id="nasdaq-sell-setup-desc" style="color: #a0aec0; font-size: 0.82rem; line-height: 1.5; margin: 0 0 12px 0;">Awaiting analysis...</p>
+        <div style="display: flex; justify-content: space-between; font-size: 0.75rem; background: rgba(0,0,0,0.3); padding: 8px; border-radius: 6px; font-family: monospace;">
+            <span>LOT: <strong id="nasdaq-sell-lot" style="color: #d4af37;">--</strong></span>
+            <span>ENTRY: <strong id="nasdaq-sell-entry" style="color: #fff;">--</strong></span>
+            <span>SL: <strong id="nasdaq-sell-sl" style="color: #ff4444;">--</strong></span>
+            <span>TP: <strong id="nasdaq-sell-tp" style="color: #00C851;">--</strong></span>
         </div>
     </div>
 </div>

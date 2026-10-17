@@ -347,3 +347,144 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// --- NASDAQ (NAS100) CHART & AI ANALYSIS LOGIC ---
+document.addEventListener('DOMContentLoaded', () => {
+    const nasdaqNavBtn = document.querySelector('[data-target="nasdaq-chart"]');
+    if (nasdaqNavBtn) {
+        nasdaqNavBtn.addEventListener('click', () => {
+            initNasdaqTradingView();
+        });
+    }
+});
+
+const nasdaqSyncBtn = document.getElementById('nasdaq-btn-chart-sync');
+if (nasdaqSyncBtn) {
+    nasdaqSyncBtn.addEventListener('click', async () => {
+        const savedKey = localStorage.getItem('supreme_gemini_key');
+        if (!savedKey) {
+            alert('Please go to the Fundamental Analysis section and connect your Google Gemini API key first.');
+            return;
+        }
+
+        nasdaqSyncBtn.innerHTML = `<i class="fas fa-spinner fa-spin" style="margin-right: 8px;"></i> Analyzing NAS100...`;
+        document.getElementById('nasdaq-buy-insight-text').textContent = "Scanning NAS100 price action...";
+        document.getElementById('nasdaq-sell-insight-text').textContent = "Scanning liquidity pools...";
+
+        try {
+            let liveNasPrice = '20,000.00';
+            try {
+                const twRes = await fetch('https://api.twelvedata.com/price?symbol=IXIC&apikey=3124690d3ede4f7w97d2853007361186');
+                const twData = await twRes.json();
+                if (twData && twData.price) {
+                    liveNasPrice = `$${parseFloat(twData.price).toFixed(2)}`;
+                }
+            } catch (e) {
+                console.warn('Twelve Data fallback used for NASDAQ.');
+            }
+
+            const nasdaqPrompt = `You are a professional Smart Money Concepts (SMC) trader analyzing NASDAQ 100 (NAS100). The current baseline reference price is approximately ${liveNasPrice}. Base all Support & Resistance, Order Blocks, Fair Value Gap, SMC, ICT, Fibonacci, Range & Deviation, Quasimodo, Price Action and Entry levels strictly around this current price. Return strictly a JSON object formatted exactly like this, with no markdown, no code blocks, and no extra text:
+
+{
+  "marketBias": "4 Words. Determine the market bias based on higher- and lower-timeframe market structure, BOS/CHoCH, liquidity sweeps, price action, momentum, and confluence from support/resistance, order blocks, FVG, and Fibonacci levels; assign a strong bias only when multiple independent signals align, use Neutral / Ranging when direction is unclear, and Wait for Confirmation when a potential setup lacks a valid entry trigger.",
+  "confidenceScore": "3 Words. Rate the analysis based on the alignment of multi-timeframe market structure, liquidity behavior, price action, momentum, and confluence; assign higher confidence only when multiple independent signals agree and reliable market data is available, and lower confidence when signals conflict, confirmation is missing, or data is insufficient.",
+  "smcStructure": "8-10 sentences explaining market structure, Base all Support & Resistance, Order Blocks, Fair Value Gap, SMC, ICT, Fibonacci (Golden Zone), Range & Deviation, Inducement, Threshold Level, Opening/Close level (wicks), Quasimodo & Price Action, = equal highs/lows (EQH/EQL), previous day/week/month highs and lows, session highs/lows. PROVIDE THE SPECIFIC PRICE.",
+  "buyInsight": "2-3 sentences. Identify key support and resistance zones with specific prices.",
+  "sellInsight": "2-3 sentences. Identify Buy-Side Liquidity (BSL), Sell-Side Liquidity (SSL), internal/external range liquidity (IRL/ERL), and potential liquidity sweeps, with specific prices.",
+  "buySetupDesc": "1-2 concise sentences explaining for buy entries based on the analysis in marketBias, confidenceScore, smcStructure, buyInsight and sellInsight.",
+  "buyLot": "0.1 - 2 Base on the confidence",
+  "buyEntry": "Price",
+  "buySl": "Price",
+  "buyTp": "Price",
+  "sellSetupDesc": "1-2 concise sentences explaining for sell entries based on the analysis in marketBias, confidenceScore, smcStructure, buyInsight and sellInsight.",
+  "sellLot": "0.1 - 2 Base on the confidence",
+  "sellEntry": "Price",
+  "sellSl": "Price",
+  "sellTp": "Price"
+}`;
+
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=${savedKey}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: nasdaqPrompt }] }],
+                    generationConfig: { responseMimeType: "application/json" }
+                })
+            });
+
+            const rawData = await response.json();
+            if (!response.ok) throw new Error(rawData.error?.message || "API Request Failed");
+
+            let aiText = rawData.candidates[0].content.parts[0].text;
+            aiText = aiText.replace(/```json/gi, '').replace(/```/gi, '').trim();
+            const aiData = JSON.parse(aiText);
+
+            // Populate UI Elements safely
+            document.getElementById('nasdaq-market-bias').textContent = aiData.marketBias || 'N/A';
+            document.getElementById('nasdaq-confidence-score').textContent = aiData.confidenceScore || 'N/A';
+            document.getElementById('nasdaq-smc-structure').textContent = aiData.smcStructure || 'N/A';
+            document.getElementById('nasdaq-buy-insight-text').textContent = aiData.buyInsight || 'N/A';
+            document.getElementById('nasdaq-sell-insight-text').textContent = aiData.sellInsight || 'N/A';
+
+            document.getElementById('nasdaq-buy-setup-desc').textContent = aiData.buySetupDesc || '';
+            document.getElementById('nasdaq-buy-lot').textContent = aiData.buyLot || '0.01';
+            document.getElementById('nasdaq-buy-entry').textContent = aiData.buyEntry || '--';
+            document.getElementById('nasdaq-buy-sl').textContent = aiData.buySl || '--';
+            document.getElementById('nasdaq-buy-tp').textContent = aiData.buyTp || '--';
+
+            document.getElementById('nasdaq-sell-setup-desc').textContent = aiData.sellSetupDesc || '';
+            document.getElementById('nasdaq-sell-lot').textContent = aiData.sellLot || '0.01';
+            document.getElementById('nasdaq-sell-entry').textContent = aiData.sellEntry || '--';
+            document.getElementById('nasdaq-sell-sl').textContent = aiData.sellSl || '--';
+            document.getElementById('nasdaq-sell-tp').textContent = aiData.sellTp || '--';
+
+        } catch (error) {
+            console.error('NAS100 Sync Error:', error);
+            document.getElementById('nasdaq-smc-structure').textContent = `Connection Error: ${error.message}`;
+        } finally {
+            nasdaqSyncBtn.innerHTML = `<i class="fas fa-solid fa-magnifying-glass-dollar" style="margin-right: 8px;"></i> Sync NAS100 Chart Insight`;
+        }
+    });
+}
+
+// FIND where window.syncAnalysisToLiveSignal is called in your BTC sync block and update it:
+if (typeof window.syncAnalysisToLiveSignal === 'function') {
+    window.syncAnalysisToLiveSignal(
+        aiData.recommendedDirection,
+        aiData.entry,
+        aiData.sl,
+        aiData.tp,
+        'NASDAQ' // <--- Ensures it records and broadcasts as BITCOIN
+    );
+    alert('🔥 NASDAQ AI Setup Synced! Check the Live Signal Form.');
+}
+
+function initNasdaqTradingView() {
+    const container = document.getElementById('nasdaq-tv_chart_widget');
+    if (!container) return;
+    container.innerHTML = ""; // Clear container to prevent duplicate widgets
+
+    new TradingView.widget({
+        "autosize": true,
+        "symbol": "CAPITALCOM:US100", // NAS100 / Nasdaq 100 symbol feed
+        "interval": "15",
+        "timezone": "Etc/UTC",
+        "theme": "dark",
+        "style": "1",
+        "locale": "en",
+        "enable_publishing": false,
+        "backgroundColor": "#000000",
+        "gridColor": "rgba(255, 255, 255, 0.05)",
+        "hide_top_toolbar": false,
+        "hide_legend": false,
+        "save_image": false,
+        "container_id": "nasdaq-tv_chart_widget",
+        "studies": [
+            "Volume@tv-basicstudies",
+            "MASimple@tv-basicstudies"
+        ],
+        "disabled_features": [
+            "header_symbol_search",
+            "header_compare"
+        ]
+    });}

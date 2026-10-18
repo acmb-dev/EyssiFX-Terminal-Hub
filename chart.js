@@ -348,20 +348,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// --- NASDAQ (NAS100) CHART & AI ANALYSIS LOGIC ---
+// --- eurusd CHART & AI ANALYSIS LOGIC ---
 document.addEventListener('DOMContentLoaded', () => {
-    const nasdaqNavBtn = document.querySelector('[data-target="nasdaq-chart"]');
-    if (nasdaqNavBtn) {
-        nasdaqNavBtn.addEventListener('click', () => {
-            initNasdaqTradingView();
+    const eurusdNavBtn = document.querySelector('[data-target="eurusd-chart"]');
+    if (eurusdNavBtn) {
+        eurusdNavBtn.addEventListener('click', () => {
+            initEurusdTradingView();
         });
     }
 });
 
-const nasdaqSyncBtn = document.getElementById('nasdaq-btn-chart-sync');
-if (nasdaqSyncBtn) {
-    nasdaqSyncBtn.addEventListener('click', async () => {
-            // --- PHT TIME RESTRICTION CHECK ---
+const eurusdSyncBtn = document.getElementById('eurusd-btn-chart-sync');
+if (eurusdSyncBtn) {
+    eurusdSyncBtn.addEventListener('click', async () => {
+        // --- PHT TIME RESTRICTION CHECK ---
         const nowPht = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Manila" }));
         const currentHours = nowPht.getHours();
         const currentMinutes = nowPht.getMinutes();
@@ -372,15 +372,15 @@ if (nasdaqSyncBtn) {
         // 2. 3:30 PM = 930 mins (Allowed: 15:30 - 15:45)
         // 3. 9:30 PM = 1290 mins (Allowed: 21:30 - 21:45)
         const allowedSlots = [
-            { start: 480, end: 495, label: "8:00 AM PHT" },
-            { start: 930, end: 945, label: "3:30 PM PHT" },
-            { start: 1290, end: 1305, label: "9:30 PM PHT" }
+            { start: 480, end: 485, label: "8:00 AM PHT" },
+            { start: 930, end: 935, label: "3:30 PM PHT" },
+            { start: 1290, end: 1295, label: "9:30 PM PHT" }
         ];
 
         const isValidTime = allowedSlots.some(slot => totalMinutes >= slot.start && totalMinutes <= slot.end);
 
         if (!isValidTime) {
-            alert('⚠️ NASDAQ chart insight can only be synced at 8:00 AM, 3:30 PM, and 9:30 PM PHT.');
+            alert('⚠️ EUR/USD chart insight can only be synced at 8:00 AM, 3:30 PM, and 9:30 PM PHT.');
             return;
         }
         const savedKey = localStorage.getItem('supreme_gemini_key');
@@ -389,23 +389,29 @@ if (nasdaqSyncBtn) {
             return;
         }
 
-        nasdaqSyncBtn.innerHTML = `<i class="fas fa-spinner fa-spin" style="margin-right: 8px;"></i> Analyzing NAS100...`;
-        document.getElementById('nasdaq-buy-insight-text').textContent = "Scanning NAS100 price action...";
-        document.getElementById('nasdaq-sell-insight-text').textContent = "Scanning liquidity pools...";
+        eurusdSyncBtn.innerHTML = `<i class="fas fa-spinner fa-spin" style="margin-right: 8px;"></i> Analyzing EURUSD...`;
+        document.getElementById('eurusd-buy-insight-text').textContent = "Scanning EURUSD price action...";
+        document.getElementById('eurusd-sell-insight-text').textContent = "Scanning liquidity pools...";
 
         try {
-            let liveNasPrice = '20,000.00';
-            try {
-                const twRes = await fetch('https://api.twelvedata.com/price?symbol=IXIC&apikey=8b567cde22204705a0071bc156e37846');
-                const twData = await twRes.json();
-                if (twData && twData.price) {
-                    liveNasPrice = `$${parseFloat(twData.price).toFixed(2)}`;
-                }
-            } catch (e) {
-                console.warn('Twelve Data fallback used for NASDAQ.');
+            let liveEurusdPrice = '1.0850'; // Fallback baseline
+            
+            // Fetch live spot price directly using Twelve Data API
+            const res = await fetch('https://api.twelvedata.com/price?symbol=EUR/USD&apikey=8b567cde22204705a0071bc156e37846');
+            const data = await res.json();
+            
+            console.log("Twelve Data Raw Response:", data); // Check your browser console to see what is returned
+            
+            if (data && data.price) {
+                liveEurusdPrice = parseFloat(data.price).toFixed(4);
+                console.log("🔥 Successfully fetched live EUR/USD price:", liveEurusdPrice);
+            } else if (data && data.message) {
+                throw new Error(`Twelve Data API Error: ${data.message}`);
+            } else {
+                throw new Error("Unexpected response structure from Twelve Data.");
             }
 
-            const nasdaqPrompt = `You are a professional trader who trades positioning scalping to intraday analyzing EURUSD. The live price is ${liveNasPrice}. Base all Support & Resistance, Order Blocks, Fair Value Gap, SMC, ICT, Fibonacci (Golden Zone), Range & Deviation, Inducement, Threshold Level, Opening/Close Level (varies), Quasimodo / Quasimodo Pattern, Price Action,  equal highs/lows (EQH/EQL), previous day/week/month highs and lows, session highs/lows and Entry/SL/TP levels strictly around this current price. 
+            const eurusdPrompt = `You are a professional trader who trades positioning scalping to intraday analyzing EURUSD. The live price is ${liveEurusdPrice}. Base all Support & Resistance, Order Blocks, Fair Value Gap, SMC, ICT, Fibonacci (Golden Zone), Range & Deviation, Inducement, Threshold Level, Opening/Close Level (varies), Quasimodo / Quasimodo Pattern, Price Action,  equal highs/lows (EQH/EQL), previous day/week/month highs and lows, session highs/lows and Entry/SL/TP levels strictly around this current price. 
 
 {
   "marketBias": "4 Words. Determine the market bias based on higher- and lower-timeframe market structure, BOS/CHoCH, liquidity sweeps, price action, momentum, and confluence from support/resistance, order blocks, FVG, and Fibonacci levels; assign a strong bias only when multiple independent signals align, use Neutral / Ranging when direction is unclear, and Wait for Confirmation when a potential setup lacks a valid entry trigger.",
@@ -429,7 +435,7 @@ if (nasdaqSyncBtn) {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    contents: [{ parts: [{ text: nasdaqPrompt }] }],
+                    contents: [{ parts: [{ text: eurusdPrompt }] }],
                     generationConfig: { responseMimeType: "application/json" }
                 })
             });
@@ -442,29 +448,29 @@ if (nasdaqSyncBtn) {
             const aiData = JSON.parse(aiText);
 
             // Populate UI Elements safely
-            document.getElementById('nasdaq-market-bias').textContent = aiData.marketBias || 'N/A';
-            document.getElementById('nasdaq-confidence-score').textContent = aiData.confidenceScore || 'N/A';
-            document.getElementById('nasdaq-smc-structure').textContent = aiData.smcStructure || 'N/A';
-            document.getElementById('nasdaq-buy-insight-text').textContent = aiData.buyInsight || 'N/A';
-            document.getElementById('nasdaq-sell-insight-text').textContent = aiData.sellInsight || 'N/A';
+            document.getElementById('eurusd-market-bias').textContent = aiData.marketBias || 'N/A';
+            document.getElementById('eurusd-confidence-score').textContent = aiData.confidenceScore || 'N/A';
+            document.getElementById('eurusd-smc-structure').textContent = aiData.smcStructure || 'N/A';
+            document.getElementById('eurusd-buy-insight-text').textContent = aiData.buyInsight || 'N/A';
+            document.getElementById('eurusd-sell-insight-text').textContent = aiData.sellInsight || 'N/A';
 
-            document.getElementById('nasdaq-buy-setup-desc').textContent = aiData.buySetupDesc || '';
-            document.getElementById('nasdaq-buy-lot').textContent = aiData.buyLot || '0.01';
-            document.getElementById('nasdaq-buy-entry').textContent = aiData.buyEntry || '--';
-            document.getElementById('nasdaq-buy-sl').textContent = aiData.buySl || '--';
-            document.getElementById('nasdaq-buy-tp').textContent = aiData.buyTp || '--';
+            document.getElementById('eurusd-buy-setup-desc').textContent = aiData.buySetupDesc || '';
+            document.getElementById('eurusd-buy-lot').textContent = aiData.buyLot || '0.01';
+            document.getElementById('eurusd-buy-entry').textContent = aiData.buyEntry || '--';
+            document.getElementById('eurusd-buy-sl').textContent = aiData.buySl || '--';
+            document.getElementById('eurusd-buy-tp').textContent = aiData.buyTp || '--';
 
-            document.getElementById('nasdaq-sell-setup-desc').textContent = aiData.sellSetupDesc || '';
-            document.getElementById('nasdaq-sell-lot').textContent = aiData.sellLot || '0.01';
-            document.getElementById('nasdaq-sell-entry').textContent = aiData.sellEntry || '--';
-            document.getElementById('nasdaq-sell-sl').textContent = aiData.sellSl || '--';
-            document.getElementById('nasdaq-sell-tp').textContent = aiData.sellTp || '--';
+            document.getElementById('eurusd-sell-setup-desc').textContent = aiData.sellSetupDesc || '';
+            document.getElementById('eurusd-sell-lot').textContent = aiData.sellLot || '0.01';
+            document.getElementById('eurusd-sell-entry').textContent = aiData.sellEntry || '--';
+            document.getElementById('eurusd-sell-sl').textContent = aiData.sellSl || '--';
+            document.getElementById('eurusd-sell-tp').textContent = aiData.sellTp || '--';
 
         } catch (error) {
-            console.error('NAS100 Sync Error:', error);
-            document.getElementById('nasdaq-smc-structure').textContent = `Connection Error: ${error.message}`;
+            console.error('EURUSD Sync Error:', error);
+            document.getElementById('eurusd-smc-structure').textContent = `Connection Error: ${error.message}`;
         } finally {
-            nasdaqSyncBtn.innerHTML = `<i class="fas fa-solid fa-magnifying-glass-dollar" style="margin-right: 8px;"></i> Sync NAS100 Chart Insight`;
+            eurusdSyncBtn.innerHTML = `<i class="fas fa-solid fa-magnifying-glass-dollar" style="margin-right: 8px;"></i> Sync EURUSD Chart Insight`;
         }
     });
 }
@@ -476,19 +482,19 @@ if (typeof window.syncAnalysisToLiveSignal === 'function') {
         aiData.entry,
         aiData.sl,
         aiData.tp,
-        'NASDAQ' // <--- Ensures it records and broadcasts as BITCOIN
+        'EURUSD' // <--- Ensures it records and broadcasts as BITCOIN
     );
-    alert('🔥 NASDAQ AI Setup Synced! Check the Live Signal Form.');
+    alert('🔥 EURUSD AI Setup Synced! Check the Live Signal Form.');
 }
 
-function initNasdaqTradingView() {
-    const container = document.getElementById('nasdaq-tv_chart_widget');
+function initEurusdTradingView() {
+    const container = document.getElementById('eurusd-tv_chart_widget');
     if (!container) return;
     container.innerHTML = ""; // Clear container to prevent duplicate widgets
-
+    
     new TradingView.widget({
         "autosize": true,
-        "symbol": "CAPITALCOM:US100", // NAS100 / Nasdaq 100 symbol feed
+        "symbol": "OANDA:EURUSD", // EUR/USD Forex Spot Feed
         "interval": "15",
         "timezone": "Etc/UTC",
         "theme": "dark",
@@ -500,7 +506,7 @@ function initNasdaqTradingView() {
         "hide_top_toolbar": false,
         "hide_legend": false,
         "save_image": false,
-        "container_id": "nasdaq-tv_chart_widget",
+        "container_id": "eurusd-tv_chart_widget",
         "studies": [
             "Volume@tv-basicstudies",
             "MASimple@tv-basicstudies"
@@ -509,4 +515,5 @@ function initNasdaqTradingView() {
             "header_symbol_search",
             "header_compare"
         ]
-    });}
+    });
+}

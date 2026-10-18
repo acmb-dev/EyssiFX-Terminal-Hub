@@ -517,3 +517,76 @@ function initEurusdTradingView() {
         ]
     });
 }
+
+function fillEntryTrackerForAsset(prefix, pairName, type) {
+    const isBuy = type === 'BUY';
+    
+    // Look up prefixed ID first (e.g., eurusd-buy-entry, btc-buy-entry), fallback to generic (buy-entry)
+    const entryEl = document.getElementById(`${prefix}-${isBuy ? 'buy' : 'sell'}-entry`) || document.getElementById(isBuy ? 'buy-entry' : 'sell-entry');
+    const slEl = document.getElementById(`${prefix}-${isBuy ? 'buy' : 'sell'}-sl`) || document.getElementById(isBuy ? 'buy-sl' : 'sell-sl');
+    const tpEl = document.getElementById(`${prefix}-${isBuy ? 'buy' : 'sell'}-tp`) || document.getElementById(isBuy ? 'buy-tp' : 'sell-tp');
+
+    const entryVal = parseFloat(entryEl?.textContent);
+    const slVal = parseFloat(slEl?.textContent);
+    const tpVal = parseFloat(tpEl?.textContent);
+
+    if (isNaN(entryVal) || isNaN(tpVal)) {
+        showCustomModal(`Please sync the ${pairName} chart insight first before tracking your entry.`);
+        return;
+    }
+
+    // 1. Automatically set the correct Pair in the Entry Tracker dropdown
+    const pairSelect = document.getElementById('sig-pair');
+    if (pairSelect) {
+        for (let opt of pairSelect.options) {
+            if (opt.value.toUpperCase().includes(pairName) || opt.text.toUpperCase().includes(pairName)) {
+                pairSelect.value = opt.value;
+                break;
+            }
+        }
+    }
+
+    // 2. Set Direction automatically
+    const directionSelect = document.getElementById('sig-direction');
+    if (directionSelect) directionSelect.value = type;
+
+    // 3. Set Entry and Stop Loss
+    document.getElementById('sig-entry').value = entryVal;
+    document.getElementById('sig-sl').value = isNaN(slVal) ? '' : slVal;
+
+    // 4. Set Main TP8 (1.00)
+    document.getElementById('sig-tp8').value = tpVal.toFixed(2);
+
+    // 5. Calculate TP1 to TP7 using your exact percentage ratios
+    const percentages = { tp1: 0.13, tp2: 0.25, tp3: 0.38, tp4: 0.50, tp5: 0.63, tp6: 0.75, tp7: 0.88 };
+    const totalDistance = tpVal - entryVal;
+
+    for (const [key, pct] of Object.entries(percentages)) {
+        const inputEl = document.getElementById(`sig-${key}`);
+        if (inputEl) {
+            const calculatedTp = entryVal + (totalDistance * pct);
+            inputEl.value = calculatedTp.toFixed(2);
+        }
+    }
+
+// 6. Properly switch to the Entry Tracker tab, update sidebar, and display section
+    // 6. Switch to the Entry Tracker tab naturally using your app's built-in navigation
+    const trackerNav = Array.from(document.querySelectorAll('.nav-link, a, button')).find(el => 
+        (el.getAttribute('data-target') === 'view-signal') || 
+        (el.textContent && el.textContent.includes('Entry Tracker'))
+    );
+    
+    if (trackerNav) {
+        trackerNav.click(); // Triggers your dashboard's native tab switcher cleanly
+    }
+
+    // Smooth scroll directly down to the Entry Tracker form after switching views
+    setTimeout(() => {
+        const signalSection = document.getElementById('view-signal');
+        if (signalSection) {
+            signalSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }, 150);
+
+    showCustomModal(`✅ ${pairName} (${type}) setup successfully auto-filled & opened in Entry Tracker!`);
+}

@@ -350,8 +350,7 @@ document.addEventListener("DOMContentLoaded", () => {
             console.warn("Twelve Data fetch bypassed, using default chart baseline.");
         }
 
-                const smcPrompt = `You are a professional trader analyzing ${selectedAsset}. 
-The live price is ${livePriceText}. Base all Support & Resistance, Order Blocks, Fair Value Gap, SMC, ICT, Fibonacci (Golden Zone), Range & Deviation, Inducement, Threshold Level, Opening/Close Level (varies), Quasimodo / Quasimodo Pattern, Price Action,  equal highs/lows (EQH/EQL), previous day/week/month highs and lows, session highs/lows and Entry/SL/TP levels strictly around this current price. 
+                const smcPrompt = `You are a professional trader who trades positioning scalping to intraday analyzing ${selectedAsset}. The live price is ${livePriceText}. Base all Support & Resistance, Order Blocks, Fair Value Gap, SMC, ICT, Fibonacci (Golden Zone), Range & Deviation, Inducement, Threshold Level, Opening/Close Level (varies), Quasimodo / Quasimodo Pattern, Price Action,  equal highs/lows (EQH/EQL), previous day/week/month highs and lows, session highs/lows, Institutional Price Resistance and Support (provide also what session is this between Asia, London and New York), Retailers Price Resistance and Support (provide also what session is this between Asia, London and New York), Highs and Lows of every session (Asia/Tokyo, London, New York) and Entry/SL/TP levels strictly around this current price. 
 
 Return strictly a JSON object with this structure, NO markdown formatting, NO backticks:
 {
@@ -359,7 +358,7 @@ Return strictly a JSON object with this structure, NO markdown formatting, NO ba
   "confidence": "3 Words. Rate the analysis based on the alignment of multi-timeframe market structure, liquidity behavior, price action, momentum, and confluence; assign higher confidence only when multiple independent signals agree and reliable market data is available, and lower confidence when signals conflict, confirmation is missing, or data is insufficient.",
 "supportResistance": "2-3 sentences. Identify key support and resistance zones",
 "liquidityZones": "2-3 sentences. Identify Buy-Side Liquidity (BSL), Sell-Side Liquidity (SSL), internal/external range liquidity (IRL/ERL), and potential liquidity sweeps."
-  "smcAnalysis": "8-10 sentences explaining market structure, Base all Support & Resistance, Order Blocks, Fair Value Gap, SMC, ICT, Fibonacci (Golden Zone), Range & Deviation, Inducement, Threshold Level, Opening/Close Level (varies), Quasimodo / Quasimodo Pattern, Price Action,  equal highs/lows (EQH/EQL), previous day/week/month highs and lows, session highs/lows. PROVIDE THE SPECIFIC PRICE",
+  "smcAnalysis": "15 sentences explaining market structure, Base all Support & Resistance, Order Blocks, Fair Value Gap, SMC, ICT, Fibonacci (Golden Zone), Range & Deviation, Inducement, Threshold Level, Opening/Close Level (varies), Quasimodo / Quasimodo Pattern, Price Action,  equal highs/lows (EQH/EQL), previous day/week/month highs and lows, session highs/lows and Institutional Price Resistance and Support (provide also what session is this between Asia, London and New York), Retailers Price Resistance and Support (provide also what session is this between Asia, London and New York), Highs and Lows of every session (Asia/Tokyo, London, New York). PROVIDE THE SPECIFIC PRICES",
   "buyLot": "0.01 - 0.2 (Based on the confidence)",
   "sellLot": "0.01 - 0.2 (Based on the confidence)",
   "buyScenario": { "condition": "Setup trigger", "entry": "Price", "sl": "Price", "tp": "Price" },

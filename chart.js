@@ -516,7 +516,7 @@ function initEurusdTradingView() {
             "header_compare"
         ]
     });
-}
+});
 
 function fillEntryTrackerForAsset(prefix, pairName, type) {
     const isBuy = type === 'BUY';

@@ -362,8 +362,8 @@ Return strictly a JSON object with this structure, NO markdown formatting, NO ba
   "smcAnalysis": "15 sentences explaining market structure, Base all Support & Resistance, Order Blocks, Fair Value Gap, SMC, ICT, Fibonacci (Golden Zone), Range & Deviation, Inducement, Threshold Level, Opening/Close Level (varies), Quasimodo / Quasimodo Pattern, Price Action,  equal highs/lows (EQH/EQL), previous day/week/month highs and lows, session highs/lows and Institutional Price Resistance and Support (provide also what session is this between Asia, London and New York), Retailers Price Resistance and Support (provide also what session is this between Asia, London and New York), Highs and Lows of every session (Asia/Tokyo, London, New York). PROVIDE THE SPECIFIC PRICES",
   "buyLot": "0.01 - 0.2 (Based on the confidence)",
   "sellLot": "0.01 - 0.2 (Based on the confidence)",
-  "buyScenario": { "condition": "Setup trigger", "entry": "Price", "sl": "Price", "tp": "Price" },
-  "sellScenario": { "condition": "Setup trigger", "entry": "Price", "sl": "Price", "tp": "Price" }
+  "buyScenario": { "condition": "2-3 SENTENCES Setup trigger (WITH SPECIFIC PRICE)", "entry": "Price", "sl": "Price", "tp": "Price" },
+  "sellScenario": { "condition": "2-3 SENTENCES Setup trigger (WITH SPECIFIC PRICE)", "entry": "Price", "sl": "Price", "tp": "Price" }
 }`;
 
                 const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=${savedKey}`, {

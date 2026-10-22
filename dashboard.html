@@ -1005,25 +1005,110 @@
         </div>
     </div>
 
-    <!-- SMC Structural & Liquidity Analysis -->
-    <div class="glass-panel" style="padding: 1.2rem; border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.3);">
-        <h4 style="color: var(--gold); margin: 0 0 10px 0; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px;">
-            <i class="fas fa-microscope" style="margin-right: 6px;"></i> Market Insight
-        </h4>
-        <p id="smc-analysis-text" style="color: #cbd5e0; font-size: 0.85rem; line-height: 1.6; margin: 0 0 12px 0;">
-            Click "Sync Live Chart Insight" to analyze market.
+    <!-- REPLACES THE SINGLE PARAGRAPH INSIDE MARKET INSIGHT -->
+<div style="margin-top: 0rem; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 8px; padding: 1rem;">
+    <h3 style="color: var(--gold); font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 1rem 0;">
+        <i class="fas fa-chart-line" style="margin-right: 6px;"></i> Market Insight
+    </h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+    
+    <!-- Card 1: Institutional & Retail Levels -->
+    <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 1rem; display: flex; flex-direction: column; gap: 8px;">
+        <strong style="color: var(--gold); font-size: 0.85rem; text-transform: uppercase;">
+            <i class="fas fa-university" style="margin-right: 6px;"></i> Institutional & Retail Zones
+        </strong>
+        <p id="smc-inst-retail" style="color: #cbd5e0; font-size: 0.8rem; line-height: 1.5; margin: 0;">
+            Awaiting sync for institutional and retail price levels with session breakdown...
         </p>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.8rem; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 10px;">
-            <div>
-                <strong style="color: #a0aec0;">Key Support & Resistance:</strong>
-                <p id="smc-levels" style="color: #fff; margin: 4px 0 0 0;">--</p>
+    </div>
+
+    <!-- Card 2: Session Highs & Lows -->
+    <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 1rem; display: flex; flex-direction: column; gap: 8px;">
+        <strong style="color: var(--gold); font-size: 0.85rem; text-transform: uppercase;">
+            <i class="fas fa-clock" style="margin-right: 6px;"></i> Session Extremes & Ranges
+        </strong>
+        <p id="smc-sessions" style="color: #cbd5e0; font-size: 0.8rem; line-height: 1.5; margin: 0;">
+            Awaiting sync for Asia, London, and New York session highs and lows...
+        </p>
+    </div>
+
+    <!-- Card 3: Order Blocks, FVG & Fibonacci -->
+    <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 1rem; display: flex; flex-direction: column; gap: 8px;">
+        <strong style="color: var(--gold); font-size: 0.85rem; text-transform: uppercase;">
+            <i class="fas fa-layer-group" style="margin-right: 6px;"></i> OB, FVG & Fibonacci Zone
+        </strong>
+        <p id="smc-blocks-fvg" style="color: #cbd5e0; font-size: 0.8rem; line-height: 1.5; margin: 0;">
+            Awaiting sync for Order Blocks, Fair Value Gaps & Golden Zone...
+        </p>
+    </div>
+
+    <!-- Card 4: Structure, Quasimodo & EQH/EQL -->
+    <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 1rem; display: flex; flex-direction: column; gap: 8px;">
+        <strong style="color: var(--gold); font-size: 0.85rem; text-transform: uppercase;">
+            <i class="fas fa-project-diagram" style="margin-right: 6px;"></i> QM & Inducement
+        </strong>
+        <p id="smc-structure-action" style="color: #cbd5e0; font-size: 0.8rem; line-height: 1.5; margin: 0;">
+            Awaiting sync for Quasimodo patterns, Inducement & EQH/EQL...
+        </p>
+        </div>
+        
+        <!-- Card 5: Key Support & Resistance -->
+    <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 1rem; display: flex; flex-direction: column; gap: 8px;">
+        <strong style="color: var(--gold); font-size: 0.85rem; text-transform: uppercase;">
+            <i class="fas fa-project-diagram" style="margin-right: 6px;"></i> Key Support & Resistance 
+        </strong>
+        <p id="smc-levels" style="color: #cbd5e0; font-size: 0.8rem; line-height: 1.5; margin: 0;">
+            Awaiting sync for Key Support & Resistance...
+        </p>
+        </div>
+        
+        <!-- Card 6: Liquidity Zones-->
+    <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 1rem; display: flex; flex-direction: column; gap: 8px;">
+        <strong style="color: var(--gold); font-size: 0.85rem; text-transform: uppercase;">
+            <i class="fas fa-project-diagram" style="margin-right: 6px;"></i> Liquidity Zones
+        </strong>
+        <p id="smc-liquidity" style="color: #cbd5e0; font-size: 0.8rem; line-height: 1.5; margin: 0;">
+            Awaiting sync for Liquidity Zones...
+        </p>
+    </div>
+</div>
+    </div>
+    
+<!-- MULTI-TIMEFRAME MARKET STRUCTURE & BIAS (DAILY, H4, H1) -->
+<div style="margin-top: 0rem; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 8px; padding: 1rem;">
+    <h3 style="color: var(--gold); font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 1rem 0;">
+        <i class="fas fa-chart-line" style="margin-right: 6px;"></i> Multi-Timeframe External Market Bias & Structure
+    </h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+        
+        <!-- Daily Timeframe Card -->
+        <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 1rem; display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <strong style="color: #fff; font-size: 0.85rem;">DAILY TIMEFRAME</strong>
+                <span id="mtf-daily-status" style="font-size: 0.75rem; font-weight: bold; padding: 2px 8px; border-radius: 4px; background: rgba(212,175,55,0.15); color: var(--gold);">AWAITING SYNC</span>
             </div>
-            <div>
-                <strong style="color: #a0aec0;">Liquidity Zones:</strong>
-                <p id="smc-liquidity" style="color: #fff; margin: 4px 0 0 0;">--</p>
+            <p id="mtf-daily-text" style="color: #a0aec0; font-size: 0.75rem; line-height: 1.4; margin: 0;">Sync chart to analyze Daily macro structure.</p>
+        </div>
+
+        <!-- H4 Timeframe Card -->
+        <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 1rem; display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <strong style="color: #fff; font-size: 0.85rem;">H4 TIMEFRAME</strong>
+                <span id="mtf-h4-status" style="font-size: 0.75rem; font-weight: bold; padding: 2px 8px; border-radius: 4px; background: rgba(212,175,55,0.15); color: var(--gold);">AWAITING SYNC</span>
             </div>
+            <p id="mtf-h4-text" style="color: #a0aec0; font-size: 0.75rem; line-height: 1.4; margin: 0;">Sync chart to analyze H4 swing structure.</p>
+        </div>
+
+        <!-- H1 Timeframe Card -->
+        <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 1rem; display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <strong style="color: #fff; font-size: 0.85rem;">H1 TIMEFRAME</strong>
+                <span id="mtf-h1-status" style="font-size: 0.75rem; font-weight: bold; padding: 2px 8px; border-radius: 4px; background: rgba(212,175,55,0.15); color: var(--gold);">AWAITING SYNC</span>
+            </div>
+            <p id="mtf-h1-text" style="color: #a0aec0; font-size: 0.75rem; line-height: 1.4; margin: 0;">Sync chart to analyze H1 intraday structure.</p>
         </div>
     </div>
+</div>
 
 <!-- Buy & Sell Scenarios Grid -->
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">

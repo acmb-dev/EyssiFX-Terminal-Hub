@@ -368,15 +368,23 @@ Follow the existing JSON structure exactly. Keep all requested fields and their 
 
 Return strictly a JSON object with this structure, NO markdown formatting, NO backticks:
 {
-  "bias": "4 Words. Determine the market bias based on higher- and lower-timeframe market structure, BOS/CHoCH, liquidity sweeps, price action, momentum, and confluence from support/resistance, order blocks, FVGs, and Fibonacci levels; assign a strong bias only when multiple independent signals align, use Neutral / Ranging when direction is unclear, and Wait for Confirmation when a potential setup lacks a valid entry trigger.",
-  "confidence": "3 Words. Rate the analysis based on the alignment of multi-timeframe market structure, liquidity behavior, price action, momentum, and confluence; assign higher confidence only when multiple independent signals agree and reliable market data is available, and lower confidence when signals conflict, confirmation is missing, or data is insufficient.",
+  "bias": "5 words. Determine the market bias based on multi-timeframe, BOS/CHoCH, liquidity sweeps, price action, momentum, and confluence from support/resistance, order blocks, FVGs, and Fibonacci levels; assign a strong bias only when multiple independent signals align, use Neutral / Ranging when direction is unclear, and Wait for Confirmation when a potential setup lacks a valid entry trigger.",
+  "confidence": "5 words. Rate the analysis based on the alignment of multi-timeframe market structure, liquidity behavior, price action, momentum, and confluence; assign higher confidence only when multiple independent signals agree and reliable market data is available, and lower confidence when signals conflict, confirmation is missing, or data is insufficient.",
 "supportResistance": "2-3 sentences. Identify key support and resistance zones",
 "liquidityZones": "2-3 sentences. Identify Buy-Side Liquidity (BSL), Sell-Side Liquidity (SSL), internal/external range liquidity (IRL/ERL), and potential liquidity sweeps."
-  "smcAnalysis": "15 sentences explaining market structure, Base all Support & Resistance, Order Blocks, Fair Value Gap, SMC, ICT, Fibonacci (Golden Zone), Range & Deviation, Inducement, Threshold Level, Opening/Close Level (varies), Quasimodo / Quasimodo Pattern, Price Action,  equal highs/lows (EQH/EQL), previous day/week/month highs and lows, session highs/lows and Institutional Price Resistance and Support (provide also what session is this between Asia, London and New York), Retailers Price Resistance and Support (provide also what session is this between Asia, London and New York), Highs and Lows of every session (Asia/Tokyo, London, New York). PROVIDE THE SPECIFIC PRICES",
+"smcInstRetail": "3-4 sentences detailing Institutional Price Support/Resistance and Retailers Price Resistance/Support with specific prices and corresponding session names (Asia, London, New York).",
+  "smcSessions": "3-4 sentences detailing exact Session highs and lows for Asia/Tokyo, London, and New York with specific prices, plus previous day/week/month highs and lows.",
+  "smcBlocksFvg": "3-4 sentences detailing Order Blocks, Fair Value Gaps (FVG), Fibonacci Golden Zone, Range & Deviation, and threshold levels with precise prices.",
+  "smcStructureAction": "3-4 sentences detailing Quasimodo patterns, Inducement, equal highs/lows (EQH/EQL), and price action behavior with exact price references.",
+  "smcLevels": "3-4 sentences detailing Key Support and Resistance with exact price references.",
+  "smcLiquidity": "3-4 sentences Liquidity Zones with exact price references.",
   "buyLot": "0.01 - 0.2 (Based on the confidence)",
   "sellLot": "0.01 - 0.2 (Based on the confidence)",
-  "buyScenario": { "condition": "2-3 SENTENCES Setup trigger (WITH SPECIFIC PRICE)", "entry": "Price", "sl": "Price", "tp": "Price" },
-  "sellScenario": { "condition": "2-3 SENTENCES Setup trigger (WITH SPECIFIC PRICE)", "entry": "Price", "sl": "Price", "tp": "Price" }
+  "buyScenario": { "condition": "2 SENTENCES Setup trigger with the Execution on 5 Minutes Time Frame (WITH SPECIFIC PRICE). Be Precise and Careful with this because this is the most crucial part, give the best setup as much as you could", "entry": "Price", "sl": "Price", "tp": "Price" },
+  "sellScenario": { "condition": "2 SENTENCES Setup trigger with the Execution on 5 Minutes Time Frame (WITH SPECIFIC PRICE). Be Precise and Careful with this because this is the most crucial part, give the best setup as much as you could", "entry": "Price", "sl": "Price", "tp": "Price" },
+  "mtfDaily": { "trend": "1-2 words", "desc": "1 brief sentence on Daily Time Frame structure (BE PRECISE WITH THIS, BECAUSETHISNIS CRUCIAL)" },
+  "mtfH4": { "trend": "1-2 words", "desc": "1 brief sentence on H4 Time Frame structure (BE PRECISE WITH THIS, BECAUSETHISNIS CRUCIAL)" },
+  "mtfH1": { "trend": "1-2 words", "desc": "1 brief sentence on H1 Time Frame structure (BE PRECISE WITH THIS, BECAUSETHISNIS CRUCIAL)" }
 }`;
 
                 const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=${savedKey}`, {
@@ -420,8 +428,10 @@ Return strictly a JSON object with this structure, NO markdown formatting, NO ba
                 biasEl.textContent = aiData.bias;
                 biasEl.style.color = aiData.bias.includes("SLIGHTLY BULLISH, BULLISH") ? "#00C851" : aiData.bias.includes("BEARISH, SLIGHTLY BEARISH") ? "#ff4444" : "var(--gold)";
 
-                document.getElementById('smc-confidence').textContent = `${aiData.confidence}`;
-                document.getElementById('smc-analysis-text').textContent = aiData.smcAnalysis;
+                document.getElementById('smc-inst-retail').textContent = aiData.smcInstRetail || 'No data provided.';
+    document.getElementById('smc-sessions').textContent = aiData.smcSessions || 'No data provided.';
+    document.getElementById('smc-blocks-fvg').textContent = aiData.smcBlocksFvg || 'No data provided.';
+    document.getElementById('smc-structure-action').textContent = aiData.smcStructureAction || 'No data provided.';
                 document.getElementById('smc-levels').textContent = aiData.supportResistance;
                 document.getElementById('smc-liquidity').textContent = aiData.liquidityZones;
 

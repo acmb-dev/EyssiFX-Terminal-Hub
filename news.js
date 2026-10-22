@@ -423,10 +423,12 @@ Return strictly a JSON object with this structure, NO markdown formatting, NO ba
                     return lot.toFixed(2);
                 };
 
-                // Inject Data into UI Cards
+                                // Inject Data into UI Cards
                 const biasEl = document.getElementById('smc-bias');
                 biasEl.textContent = aiData.bias;
                 biasEl.style.color = aiData.bias.includes("SLIGHTLY BULLISH, BULLISH") ? "#00C851" : aiData.bias.includes("BEARISH, SLIGHTLY BEARISH") ? "#ff4444" : "var(--gold)";
+
+                document.getElementById('smc-confidence').textContent = `${aiData.confidence}`;
 
                 document.getElementById('smc-inst-retail').textContent = aiData.smcInstRetail || 'No data provided.';
     document.getElementById('smc-sessions').textContent = aiData.smcSessions || 'No data provided.';
@@ -448,7 +450,33 @@ Return strictly a JSON object with this structure, NO markdown formatting, NO ba
                 document.getElementById('sell-sl').textContent = aiData.sellScenario.sl;
                 document.getElementById('sell-tp').textContent = aiData.sellScenario.tp;
                 document.getElementById('sell-lot').textContent = calculateLot(aiData.sellScenario.entry, aiData.sellScenario.sl);
+              
+                // --- MULTI-TIMEFRAME STRUCTURE & BIAS UPDATES ---
+    const dailyStat = document.getElementById('mtf-daily-status');
+    const dailyText = document.getElementById('mtf-daily-text');
+    if (dailyStat && aiData.mtfDaily) {
+        dailyStat.textContent = aiData.mtfDaily.trend;
+        dailyText.textContent = aiData.mtfDaily.desc;
+        dailyStat.style.color = aiData.mtfDaily.trend.includes('UP') ? '#00C851' : (aiData.mtfDaily.trend.includes('DOWN') ? '#ff4444' : 'var(--gold)');
+    }
 
+    const h4Stat = document.getElementById('mtf-h4-status');
+    const h4Text = document.getElementById('mtf-h4-text');
+    if (h4Stat && aiData.mtfH4) {
+        h4Stat.textContent = aiData.mtfH4.trend;
+        h4Text.textContent = aiData.mtfH4.desc;
+        h4Stat.style.color = aiData.mtfH4.trend.includes('UP') ? '#00C851' : (aiData.mtfH4.trend.includes('DOWN') ? '#ff4444' : 'var(--gold)');
+    }
+
+    const h1Stat = document.getElementById('mtf-h1-status');
+    const h1Text = document.getElementById('mtf-h1-text');
+    if (h1Stat && aiData.mtfH1) {
+        h1Stat.textContent = aiData.mtfH1.trend;
+        h1Text.textContent = aiData.mtfH1.desc;
+        h1Stat.style.color = aiData.mtfH1.trend.includes('UP') ? '#00C851' : (aiData.mtfH1.trend.includes('DOWN') ? '#ff4444' : 'var(--gold)');
+    }
+
+                
             } catch (error) {
                 console.error("SMC Chart Sync Error:", error);
                 document.getElementById('smc-analysis-text').textContent = `Analysis failed: ${error.message}`;

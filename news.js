@@ -370,11 +370,11 @@ Return strictly a JSON object with this structure, NO markdown formatting, NO ba
 {
   "bias": "5 words. Determine the market bias based on multi-timeframe, BOS/CHoCH, liquidity sweeps, price action, momentum, and confluence from support/resistance, order blocks, FVGs, and Fibonacci levels; assign a strong bias only when multiple independent signals align, use Neutral / Ranging when direction is unclear, and Wait for Confirmation when a potential setup lacks a valid entry trigger.",
   "confidence": "5 words. Rate the analysis based on the alignment of multi-timeframe market structure, liquidity behavior, price action, momentum, and confluence; assign higher confidence only when multiple independent signals agree and reliable market data is available, and lower confidence when signals conflict, confirmation is missing, or data is insufficient.",
-"supportResistance": "2-3 sentences. Identify key support and resistance zones",
-"liquidityZones": "2-3 sentences. Identify Buy-Side Liquidity (BSL), Sell-Side Liquidity (SSL), internal/external range liquidity (IRL/ERL), and potential liquidity sweeps."
-"smcInstRetail": "3-4 sentences detailing Institutional Price Support/Resistance and Retailers Price Resistance/Support with specific prices and corresponding session names (Asia, London, New York).",
-  "smcSessions": "3-4 sentences detailing exact Session highs and lows for Asia/Tokyo, London, and New York with specific prices, plus previous day/week/month highs and lows.",
-  "smcBlocksFvg": "3-4 sentences detailing Order Blocks, Fair Value Gaps (FVG), Fibonacci Golden Zone, Range & Deviation, and threshold levels with precise prices.",
+"supportResistance": "4 sentences. Identify key support and resistance zones",
+"liquidityZones": "4 sentences. Identify Buy-Side Liquidity (BSL), Sell-Side Liquidity (SSL), internal/external range liquidity (IRL/ERL), and potential liquidity sweeps."
+"smcInstRetail": "4 sentences detailing Institutional Price Support/Resistance and Retailers Price Resistance/Support with specific prices and corresponding session names (Asia, London, New York).",
+  "smcSessions": "4 sentences detailing exact previous day and weeks Session highs and lows for Asia/Tokyo, London, and New York with specific prices",
+  "smcBlocksFvg": "4 sentences, Analyze the 4H and 1H timeframes to determine the trend using confirmed market structure (HH/HL for bullish, LH/LL for bearish), identify the exact prices of key swing points, support/resistance, BOS, and CHOCH, and classify the trend as bullish, bearish, ranging, or transitioning. Confirm the overall bias using both timeframes, prioritize the 4H trend, and use the 1H to validate structure and identify potential continuation or reversal levels. Provide precise price levels for key Order Blocks, Fibonacci Golden Zone, Range & Deviation, and Threshold Levels, clearly distinguishing confirmed structure from potential scenarios and avoiding unsupported predictions.",
   "smcStructureAction": "3-4 sentences detailing Quasimodo patterns, Inducement, equal highs/lows (EQH/EQL), and price action behavior with exact price references.",
   "smcLevels": "3-4 sentences detailing Key Support and Resistance with exact price references.",
   "smcLiquidity": "3-4 sentences Liquidity Zones with exact price references.",
@@ -382,9 +382,9 @@ Return strictly a JSON object with this structure, NO markdown formatting, NO ba
   "sellLot": "0.01 - 0.2 (Based on the confidence)",
   "buyScenario": { "condition": "2 SENTENCES Setup trigger with the Execution on 5 Minutes Time Frame (WITH SPECIFIC PRICE). Be Precise and Careful with this because this is the most crucial part, give the best setup as much as you could", "entry": "Price", "sl": "Price", "tp": "Price" },
   "sellScenario": { "condition": "2 SENTENCES Setup trigger with the Execution on 5 Minutes Time Frame (WITH SPECIFIC PRICE). Be Precise and Careful with this because this is the most crucial part, give the best setup as much as you could", "entry": "Price", "sl": "Price", "tp": "Price" },
-  "mtfDaily": { "trend": "1-2 words", "desc": "1 brief sentence on Daily Time Frame structure (BE PRECISE WITH THIS, BECAUSETHISNIS CRUCIAL)" },
-  "mtfH4": { "trend": "1-2 words", "desc": "1 brief sentence on H4 Time Frame structure (BE PRECISE WITH THIS, BECAUSETHISNIS CRUCIAL)" },
-  "mtfH1": { "trend": "1-2 words", "desc": "1 brief sentence on H1 Time Frame structure (BE PRECISE WITH THIS, BECAUSETHISNIS CRUCIAL)" }
+  "mtfDaily": { "trend": "1-2 words", "desc": "1 brief sentence on Monthly Time Frame Support and Resistance (BE PRECISE WITH THIS, BECAUSE THIS IS CRUCIAL)" },
+  "mtfH4": { "trend": "1-2 words", "desc": "1 brief sentence on Daily Time Frame Support and Resistance (BE PRECISE WITH THIS, BECAUSE THIS IS CRUCIAL)" },
+  "mtfH1": { "trend": "1-2 words", "desc": "1 brief sentence on H4 Time Frame structure Support and Resistance (BE PRECISE WITH THIS, BECAUSE THIS IS CRUCIAL)" }
 }`;
 
                 const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=${savedKey}`, {

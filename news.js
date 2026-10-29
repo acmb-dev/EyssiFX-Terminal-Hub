@@ -181,15 +181,39 @@ async function syncForexFactoryData() {
 
     async function runGeminiSync(apiKey) {
         // UI Loading State
-        btnAnalyze.innerHTML = `<i class="fas fa-spinner fa-spin" style="margin-right: 8px;"></i> Syncing with Google Gemini...`;
+        btnAnalyze.innerHTML = `<i class="fas fa-spinner fa-spin" style="margin-right: 8px;"></i> Syncing the Fundamental`;
         document.getElementById('ai-insight-cards').style.opacity = "0.4";
         document.getElementById('gold-title').textContent = "ANALYZING...";
         document.getElementById('dxy-title').textContent = "ANALYZING...";
 
         try {
             // Strict prompt formatting for Google Gemini
-            const promptText = `You are an institutional trading AI analyzing live global macroeconomic conditions. Return strictly a JSON object formatted exactly like this, no markdown, no other text:
-{"goldTitle":"BULLISH / SLIGHTLY BULLISH / NEUTRAL / SLIGHTLY BEARISH / BEARISH","goldDesc":"7 short sentence explaining why","dxyTitle":"BULLISH / SLIGHTLY BULLISH / NEUTRAL / SLIGHTLY BEARISH / BEARISH","dxyDesc":"7 short sentence explaining why","advisoryTitle":"3-5 word advice","advisoryDesc":"7 actionable sentence","fearValue":number 1-100,"fearText":"GREED or FEAR","fearDesc":"7 short sentence explanation"} What are the latest fundamental factors and events that could affect the price of gold (XAUUSD) right now? Please analyze the latest developments in the U.S. economy, Federal Reserve and interest-rate expectations, inflation, employment data, U.S. Dollar (DXY), Treasury yields, geopolitical events, central-bank gold purchases, and other major economic or global events. Explain whether each factor is potentially bullish or bearish for gold, and identify which factors are currently having the strongest influence on XAUUSD? Provide the JSON response.`;
+            const promptText = `You are an institutional-grade macroeconomic AI analyzing the latest fundamental conditions affecting XAUUSD (Gold) and DXY. Use the latest verifiable data from official sources, Forex Factory, Reuters, and other reliable financial sources. Never fabricate data or news; acknowledge unavailable information.
+                Return strictly one valid JSON object with exactly these keys and no additional text:
+
+{"goldTitle": "BULLISH / SLIGHTLY BULLISH / NEUTRAL / SLIGHTLY BEARISH / BEARISH",
+"goldDesc": "Exactly 7 concise sentences.",
+"dxyTitle": "BULLISH / SLIGHTLY BULLISH / NEUTRAL / SLIGHTLY BEARISH / BEARISH",
+"dxyDesc": "Exactly 7 concise sentences.",
+"advisoryTitle": "3-5 words",
+"advisoryDesc": "Exactly 7 actionable sentences.",
+"fearValue": 1-100,
+"fearText": "GREED or FEAR",
+"fearDesc": "Exactly 7 concise sentences."}
+
+                Analyze the latest Fed decisions and interest-rate expectations, CPI/PCE inflation, employment, GDP, DXY, U.S. Treasury and real yields, geopolitical risks, central-bank gold purchases, gold ETF flows, and other major market-moving events.
+
+                Compare actual economic releases with forecasts and previous readings, including revisions. Distinguish confirmed facts from expectations and identify what markets have already priced in.
+
+                Determine the strongest current bullish and bearish drivers for gold and DXY. Explain how monetary policy, inflation, employment, real yields, dollar strength, and safe-haven demand interact. Prioritize fresh, high-impact evidence and actual market reactions over generic assumptions.
+
+                Classify each outlook based on the overall balance of evidence. Do not automatically assume gold and DXY move inversely or that high inflation always supports gold.
+
+                The advisory must state the fundamental bias, strongest supporting and opposing factors, DXY/yield implications, next major scheduled economic event, what could confirm or invalidate the bias, and the importance of technical confirmation and risk management.
+
+                Assess fearValue from 1–100 using verifiable market sentiment indicators: 1–20 extreme fear, 21–40 elevated fear, 41–59 neutral/mixed, 60–80 elevated greed, and 81–100 extreme greed. Use FEAR below 40, GREED above 60, and the closer category to neutral; use FEAR at exactly 50. Do not fabricate sentiment data.
+
+                All descriptions must contain exactly 7 concise sentences. Return valid JSON only, with no Markdown or text outside the object.`;
 
             // Call the 100% free Gemini API endpoint
             const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=${apiKey}`, {
